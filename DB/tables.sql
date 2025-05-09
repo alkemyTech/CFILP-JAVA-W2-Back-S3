@@ -1,11 +1,11 @@
 
 CREATE TABLE Usuario (
-  id_usuario      INTEGER PRIMARY KEY AUTOINCREMENT,
+  id_usuario      SERIAL PRIMARY KEY,
   nombre          TEXT NOT NULL,
   apellido        TEXT NOT NULL,
   email           TEXT NOT NULL UNIQUE,
   telefono        TEXT,
-  fecha_creacion  TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  fecha_creacion  TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   contrasenia     TEXT NOT NULL
 );
 
@@ -22,8 +22,8 @@ CREATE TABLE Admin (
 CREATE TABLE Cuenta (
   numero_cuenta   TEXT PRIMARY KEY,
   moneda          TEXT NOT NULL,
-  monto           REAL NOT NULL DEFAULT 0.0,
-  fecha           TEXT NOT NULL,
+  monto           NUMERIC NOT NULL DEFAULT 0.0,
+  fecha           DATE NOT NULL,
   alias           TEXT UNIQUE,
   tipo            TEXT NOT NULL,
   cvu             TEXT UNIQUE NOT NULL,
@@ -34,12 +34,12 @@ CREATE TABLE Cuenta (
 CREATE TABLE Tarjeta (
   numero_tarjeta    TEXT PRIMARY KEY,
   codigo_seguridad  TEXT NOT NULL,
-  fecha_vencimiento TEXT NOT NULL,
+  fecha_vencimiento DATE NOT NULL,
   compania          TEXT NOT NULL,
   tipo              TEXT NOT NULL,
-  fecha_emision     TEXT NOT NULL,
+  fecha_emision     DATE NOT NULL,
   particular        TEXT NOT NULL,
-  propia            INTEGER NOT NULL DEFAULT 1 -- Indica si es dada por nosotros o por otra compañia como, VISA, Brubank, etc. Si es 0 es FALSE y si es 1 es TRUE
+  propia            BOOLEAN NOT NULL DEFAULT TRUE
 );
 
 CREATE TABLE Cuenta_Tarjeta (
@@ -51,10 +51,10 @@ CREATE TABLE Cuenta_Tarjeta (
 );
 
 CREATE TABLE Transaccion (
-  id_transaccion  INTEGER PRIMARY KEY AUTOINCREMENT,
-  monto           REAL NOT NULL,
+  id_transaccion  SERIAL PRIMARY KEY,
+  monto           NUMERIC NOT NULL,
   descripcion     TEXT,
-  fecha           TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  fecha           TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   estado          TEXT NOT NULL
 );
 
@@ -66,7 +66,7 @@ CREATE TABLE Deposito (
 );
 
 CREATE TABLE Extraccion (
-  id_extraccion  INTEGER PRIMARY KEY,
+  id_extraccion   INTEGER PRIMARY KEY,
   cuenta_origen   TEXT NOT NULL,
   FOREIGN KEY (id_extraccion) REFERENCES Transaccion(id_transaccion),
   FOREIGN KEY (cuenta_origen) REFERENCES Cuenta(numero_cuenta)
@@ -77,12 +77,11 @@ CREATE TABLE Transferencia (
   cuenta_origen    TEXT NOT NULL,
   cuenta_destino   TEXT NOT NULL,
   FOREIGN KEY (id_transferencia) REFERENCES Transaccion(id_transaccion),
-  FOREIGN KEY (cuenta_origen)  REFERENCES Cuenta(numero_cuenta),
+  FOREIGN KEY (cuenta_origen) REFERENCES Cuenta(numero_cuenta),
   FOREIGN KEY (cuenta_destino) REFERENCES Cuenta(numero_cuenta)
 );
 
-
---- Indices
+-- Índices
 
 CREATE INDEX idx_transaccion_fecha ON Transaccion(fecha);
 CREATE INDEX idx_cuenta_cliente ON Cuenta(cliente_id);
