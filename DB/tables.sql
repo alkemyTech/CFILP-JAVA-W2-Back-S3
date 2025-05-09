@@ -1,4 +1,3 @@
-
 CREATE TABLE Usuario (
   id_usuario      SERIAL PRIMARY KEY,
   nombre          TEXT NOT NULL,
