@@ -1,4 +1,4 @@
-INSERT INTO Usuario (nombre, apellido, email, telefono, contrasena) VALUES
+INSERT INTO Usuario (nombre, apellido, email, telefono, contrasenia) VALUES
 ('Juan', 'Perez', 'juan.perez@email.com', '1122334455', 'contrasena123'),
 ('Maria', 'Lopez', 'maria.lopez@email.com', '2233445566', 'clavesegura456'),
 ('Carlos', 'Gomez', 'carlos.gomez@email.com', '3344556677', 'micontra789'),
@@ -7,7 +7,7 @@ INSERT INTO Usuario (nombre, apellido, email, telefono, contrasena) VALUES
 ('Laura', 'Fernandez', 'laura.f@email.com', '5566778899', 'laurasegura'),
 ('Pedro', 'Martinez', 'pedro.m@email.com', '6677889900', 'pedroclave');
 
-INSERT INTO Cliente (id) VALUES
+INSERT INTO Cliente (id_cliente) VALUES
 (1), -- Juan Perez
 (2), -- Maria Lopez
 (3), -- Carlos Gomez (Sin tarjetas asignadas)
@@ -17,11 +17,11 @@ INSERT INTO Cliente (id) VALUES
 (7); -- Pedro Martinez (Sin tarjetas asignadas)
 
 
-INSERT INTO Admin (id) VALUES
+INSERT INTO Admin (id_admin) VALUES
 (5); -- Admin/Cliente
 
 
-INSERT INTO Cuenta (nro_cuenta, moneda, monto, fecha, alias, tipo, cvu, cliente_id) VALUES
+INSERT INTO Cuenta (numero_cuenta, moneda, monto, fecha, alias, tipo, cvu, id_cliente) VALUES
 ('001-123456/1', 'ARS', 160000.50, '2023-01-15', 'JUAN.PEREZ.CAJA', 'Caja de Ahorro', '0000000100000000000001', 1), -- Juan ARS CA (Deposito y Transferencia)
 ('001-123456/2', 'USD', 260.75, '2023-01-15', 'JUAN.PEREZ.DOLAR', 'Caja de Ahorro', '0000000100000000000002', 1), -- Juan USD CA
 ('002-987654/1', 'ARS', 540000.00, '2022-11-20', 'MARIA.LOPEZ.CC', 'Cuenta Corriente', '0000000200000000000001', 2), -- Maria ARS CC
@@ -33,7 +33,7 @@ INSERT INTO Cuenta (nro_cuenta, moneda, monto, fecha, alias, tipo, cvu, cliente_
 ('007-112200/1', 'USD', 45.00, '2024-02-18', 'PEDRO.M.DOLAR', 'Caja de Ahorro', '0000000700000000000001', 7); -- Pedro USD CA (Sin tarjetas)
 
 
-INSERT INTO Tarjeta (nro_tarjeta, cod_sec, fecha_vencimiento, compania, tipo, fecha_emision, particular, propia) VALUES
+INSERT INTO Tarjeta (numero_tarjeta, codigo_seguridad, fecha_vencimiento, compania, tipo, fecha_emision, particular, propia) VALUES
 ('4000111122223333', '123', '2028-12-31', 'VISA', 'Credito', '2022-12-01', 'JUAN PEREZ', 1), -- Juan (Propia)
 ('5000444455556666', '456', '2027-11-30', 'Mastercard', 'Debito', '2021-11-15', 'MARIA LOPEZ', 1), -- Maria (Propia)
 ('4000777788889999', '789', '2029-10-31', 'VISA', 'Debito', '2023-09-20', 'ANA RODRIGUEZ', 1), -- Ana (Propia)
@@ -43,7 +43,7 @@ INSERT INTO Tarjeta (nro_tarjeta, cod_sec, fecha_vencimiento, compania, tipo, fe
 ('4222333344445555', '234', '2025-05-31', 'VISA', 'Debito', '2020-04-01', 'ANA RODRIGUEZ', 0); -- Ana (Ajena 2)
 
 
-INSERT INTO Cuenta_Tarjeta (nro_cuenta, nro_tarjeta) VALUES
+INSERT INTO Cuenta_Tarjeta (numero_cuenta, numero_tarjeta) VALUES
 ('001-123456/1', '4000111122223333'), -- Juan ARS CA con su tarjeta VISA Credito (Propia)
 ('002-987654/1', '5000444455556666'), -- Maria ARS CC con su tarjeta Mastercard Debito (Propia)
 ('004-445566/2', '4000777788889999'), -- Ana ARS CA con su tarjeta VISA Debito (Propia)
