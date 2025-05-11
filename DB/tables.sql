@@ -17,8 +17,8 @@ CREATE TABLE Cuenta (
   alias           TEXT UNIQUE,
   tipo            TEXT NOT NULL,
   cvu             TEXT UNIQUE NOT NULL,
-  cliente_id      INTEGER NOT NULL,
-  FOREIGN KEY (cliente_id) REFERENCES Cliente(id_cliente)
+  usuario_id      INTEGER NOT NULL,
+  FOREIGN KEY (usuario_id) REFERENCES Usuario(id_usuario)
 );
 
 CREATE TABLE Tarjeta (
