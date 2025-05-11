@@ -1,38 +1,40 @@
 package com.AlkemyPocket.model;
 
-import jakarta.persistence.*;
-import java.time.LocalDateTime;
+import jakarta.persistence.*; // Importa las anotaciones de JPA, para poder "decorar" la clase con @. Imagina que la clase es una caja grande con cosas dentro y con las anotaciones lo que hacemos es indicar como usarla, cómo usar cada cosa.
+import java.time.LocalDateTime; // Importa la clase para manejar fecha y hora.
 
-@Entity
-@Table(name = "usuario")
+@Entity // Marca la clase como una ENTIDAD (una tabla en la base de datos).
+@Table(name = "usuario") // Dice que la tabla de la base de datos se llama 'usuario'.
 public class Usuario {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_usuario")
+    @Id // Marca este campo como PRIMARY KEY.
+    @GeneratedValue(strategy = GenerationType.IDENTITY) // Dice que el id se genera automáticamente (autoincremental).
+    @Column(name = "id_usuario") // Asocia este campo a la columna 'id_usuario' de la tabla. Pareciera que si el nombre no lo determinamos arriba por defecto toma el nombre del atributo. Y creo que suele pasar cuando el nombre de la columna SQL tiene un guion bajo.
     private Integer id;
 
-    @Column(nullable = false)
+    @Column(nullable = false) // Columna 'nombre' que NO puede ser null.
     private String nombre;
 
     @Column(nullable = false)
     private String apellido;
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false, unique = true) // Columna 'email' que NO puede ser null y debe ser único.
     private String email;
 
-    private String telefono;
+    private String telefono; // Columna 'telefono' (nullable por defecto = sí puede ser null)
 
-    @Column(name = "fecha_creacion", nullable = false)
+    @Column(name = "fecha_creacion", nullable = false) // Mapea la columna 'fecha_creacion' que NO puede ser null.
     private LocalDateTime fechaCreacion;
 
     @Column(nullable = false)
     private String contrasenia;
 
-    // Constructor vacío (obligatorio para JPA)
+
+    // Siguen los constructores normales, getters y setters.
+
     public Usuario() {}
 
-    // Constructor con todos los campos (sin id porque es auto-generado)
+
     public Usuario(String nombre, String apellido, String email, String telefono, LocalDateTime fechaCreacion, String contrasenia) {
         this.nombre = nombre;
         this.apellido = apellido;
@@ -42,7 +44,7 @@ public class Usuario {
         this.contrasenia = contrasenia;
     }
 
-    // Getters y Setters
+
     public Integer getId() { return id; }
     public void setId(Integer id) { this.id = id; }
 
@@ -62,6 +64,6 @@ public class Usuario {
     public void setFechaCreacion(LocalDateTime fechaCreacion) { this.fechaCreacion = fechaCreacion; }
 
     public String getContrasenia() { return contrasenia; }
-    public void setContrasenia(String contrasenia) { this.contrasenia = contrasenia; }
+    public void setContrasenia(String contrasenia) { this.contrasenia = contrasenia; } // Recordar que Set contraseña deberia validar. Supongo que podriamos dejar la validacion de caracteres para el FRONT y la validación del contenido para el BACK.
 }
 

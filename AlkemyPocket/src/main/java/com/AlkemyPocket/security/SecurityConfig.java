@@ -14,11 +14,8 @@ public class SecurityConfig {
         http
                 .csrf(csrf -> csrf.disable()) // Nueva forma para deshabilitar CSRF
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/usuarios/**").permitAll() // Permitir acceso libre a usuarios
-                        .anyRequest().authenticated() // Todo lo demás requiere autenticación
-                )
-                .httpBasic(withDefaults()); // Nueva forma para habilitar HTTP Basic
-
+                        .anyRequest().permitAll()  // Todo accesible
+                );
         return http.build();
     }
 }
