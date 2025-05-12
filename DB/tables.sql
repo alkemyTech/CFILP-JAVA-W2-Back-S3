@@ -11,11 +11,11 @@ CREATE TABLE Usuario (
 
 CREATE TABLE Cuenta (
   numero_cuenta   TEXT PRIMARY KEY,
-  moneda          TEXT NOT NULL,
+  moneda          TEXT NOT NULL DEFAULT 'Ars',
   monto           NUMERIC NOT NULL DEFAULT 0.0,
-  fecha           DATE NOT NULL,
+  fecha           TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   alias           TEXT UNIQUE,
-  tipo            TEXT NOT NULL,
+  tipo            TEXT NOT NULL DEFAULT 'CA' CHECK (tipo IN ('CA', 'CC')),
   cvu             TEXT UNIQUE NOT NULL,
   usuario_id      INTEGER NOT NULL,
   FOREIGN KEY (usuario_id) REFERENCES Usuario(id_usuario)
