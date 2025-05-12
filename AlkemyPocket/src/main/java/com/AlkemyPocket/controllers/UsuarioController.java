@@ -1,6 +1,6 @@
 package com.AlkemyPocket.controllers;
 
-import com.AlkemyPocket.dto.UsuarioDTO;
+import com.AlkemyPocket.dto.ActualizarUsuarioDTO;
 import com.AlkemyPocket.model.Usuario; // Importa la clase usuario porque manipula objetos "Usuario".
 import com.AlkemyPocket.services.UsuarioService; // Importa la clase UsuarioService porque llama a sus métodos y esta importación permite usarlo como tipo de dato. (Ver despues la inyección).
 import jakarta.persistence.EntityNotFoundException;
@@ -10,7 +10,7 @@ import org.springframework.http.HttpStatus; // Permite reflejar de manera mas cl
 import org.springframework.web.bind.annotation.*; // Trae las anotaciones de Spring MVC necesarias para decorar la clase.
 
 import java.util.List; // Importa tipo de dato que va a ir en las respuestas.
-import java.util.Optional; // Guarda que este también es un tipo de dato cuando lo que se busca puede o no estar.
+
 
 @RestController // Convertimos la clase en un controlador REST, significa que los métodos devuelven directamente JSON (no vistas HTML).
 @RequestMapping("/api/usuarios") // Define la base para todas las rutas => Tenemos que ver de cambiarlo a AlkemyPocket/usuarios o similar.
@@ -44,7 +44,7 @@ public class UsuarioController {
         }
     }
 
-    // POST DE CREACION CON MANEJO DE TRY CATCH Y VALIDACIONES EN EL SERVICIO.
+    // POST DE CREACIÓN CON MANEJO DE TRY CATCH Y VALIDACIONES EN EL SERVICIO.
 
     @PostMapping // Declara que si el metodo es POST a la base de ruta a secas se ejecuta el siguiente metodo.
     public ResponseEntity<?> crearUsuario(@RequestBody Usuario usuario) { // La notación significa que recibe un objeto tipo Usuario en el cuerpo de la petición y lo convierte en un JSON.
@@ -58,7 +58,7 @@ public class UsuarioController {
     // PUT DE ACTUALIZACION CON DTO Y MANEJO DE ERRORES POSIBLES.
 
     @PutMapping("/{id}") // Declara que si el metodo es PUT a la base de ruta + ID se ejecuta el siguiente metodo.
-    public ResponseEntity<?> actualizarUsuario(@PathVariable Integer id, @RequestBody UsuarioDTO usuario) {
+    public ResponseEntity<?> actualizarUsuario(@PathVariable Integer id, @RequestBody ActualizarUsuarioDTO usuario) {
         try {
             return ResponseEntity.status(HttpStatus.OK).body(usuarioService.actualizarUsuario(id, usuario));
         } catch (RuntimeException e) {
