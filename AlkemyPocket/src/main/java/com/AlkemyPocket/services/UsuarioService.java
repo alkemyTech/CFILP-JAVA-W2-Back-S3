@@ -16,6 +16,9 @@ public class UsuarioService {
     @Autowired
     private UsuarioRepository usuarioRepository;
 
+    @Autowired
+    private CuentaService cuentaService;
+
     public List<Usuario> obtenerTodos() {
         List<Usuario> lista = usuarioRepository.findAll();
         if (lista.isEmpty()) {
@@ -49,8 +52,10 @@ public class UsuarioService {
         if (usuario.getContrasenia() == null || usuario.getContrasenia().isBlank()) {
             throw new IllegalArgumentException("La contraseña es obligatoria");
         }
+        Usuario nuevoUsuario = usuarioRepository.save(usuario);
+        cuentaService.crearCuenta(nuevoUsuario.getId(), null);
+        return nuevoUsuario;
 
-        return usuarioRepository.save(usuario);
     }
 
     public Usuario actualizarUsuario(Integer id, ActualizarUsuarioDTO usuarioActualizado) {
