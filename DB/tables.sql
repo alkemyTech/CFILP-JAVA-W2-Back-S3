@@ -5,17 +5,8 @@ CREATE TABLE Usuario (
   email           TEXT NOT NULL UNIQUE,
   telefono        TEXT,
   fecha_creacion  TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  contrasenia     TEXT NOT NULL
-);
-
-CREATE TABLE Cliente (
-  id_cliente      INTEGER PRIMARY KEY,
-  FOREIGN KEY (id_cliente) REFERENCES Usuario(id_usuario)
-);
-
-CREATE TABLE Admin (
-  id_admin        INTEGER PRIMARY KEY,
-  FOREIGN KEY (id_admin) REFERENCES Usuario(id_usuario)
+  contrasenia     TEXT NOT NULL,
+  rol             TEXT NOT NULL DEFAULT 'cliente' CHECK (rol IN ('cliente', 'admin'))
 );
 
 CREATE TABLE Cuenta (
@@ -26,8 +17,8 @@ CREATE TABLE Cuenta (
   alias           TEXT UNIQUE,
   tipo            TEXT NOT NULL,
   cvu             TEXT UNIQUE NOT NULL,
-  cliente_id      INTEGER NOT NULL,
-  FOREIGN KEY (cliente_id) REFERENCES Cliente(id_cliente)
+  usuario_id      INTEGER NOT NULL,
+  FOREIGN KEY (usuario_id) REFERENCES Usuario(id_usuario)
 );
 
 CREATE TABLE Tarjeta (
