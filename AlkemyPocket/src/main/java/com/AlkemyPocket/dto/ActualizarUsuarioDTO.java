@@ -1,12 +1,15 @@
 package com.AlkemyPocket.dto;
 
-public class UsuarioDTO {
+import com.AlkemyPocket.model.RolUsuario;
+
+public class ActualizarUsuarioDTO {
 
     private String nombre;
     private String apellido;
     private String email;
     private String telefono;
     private String contrasenia;
+    private RolUsuario rol;
 
     public String getNombre() {
         return nombre;
@@ -47,4 +50,13 @@ public class UsuarioDTO {
     public void setContrasenia(String contrasenia) {
         this.contrasenia = contrasenia;
     }
+
+    public RolUsuario getRol() {
+        return rol;
+    }
+
+    public void setRol(RolUsuario rol) {
+        this.rol = rol;
+    }
+
 }

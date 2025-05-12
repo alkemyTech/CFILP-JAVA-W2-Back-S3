@@ -1,6 +1,7 @@
 package com.AlkemyPocket.services;
 
-import com.AlkemyPocket.dto.UsuarioDTO; // DATA TRANSFER OBJECT
+import com.AlkemyPocket.dto.ActualizarUsuarioDTO; // DATA TRANSFER OBJECT
+import com.AlkemyPocket.model.RolUsuario;
 import com.AlkemyPocket.model.Usuario;
 import com.AlkemyPocket.repository.UsuarioRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -48,16 +49,18 @@ public class UsuarioService {
         if (usuario.getContrasenia() == null || usuario.getContrasenia().isBlank()) {
             throw new IllegalArgumentException("La contraseña es obligatoria");
         }
+
         return usuarioRepository.save(usuario);
     }
 
-    public Usuario actualizarUsuario(Integer id, UsuarioDTO usuarioActualizado) {
+    public Usuario actualizarUsuario(Integer id, ActualizarUsuarioDTO usuarioActualizado) {
         return usuarioRepository.findById(id).map(usuario -> {
             if (usuarioActualizado.getNombre() != null) usuario.setNombre(usuarioActualizado.getNombre());
             if (usuarioActualizado.getApellido() != null) usuario.setApellido(usuarioActualizado.getApellido());
             if (usuarioActualizado.getEmail() != null) usuario.setEmail(usuarioActualizado.getEmail());
             if (usuarioActualizado.getTelefono() != null) usuario.setTelefono(usuarioActualizado.getTelefono());
             if (usuarioActualizado.getContrasenia() != null) usuario.setContrasenia(usuarioActualizado.getContrasenia());
+            if (usuarioActualizado.getRol() != null) usuario.setRol(usuarioActualizado.getRol());
             return usuarioRepository.save(usuario);
         }).orElseThrow(() -> new RuntimeException("Usuario no encontrado con id " + id));
     }
