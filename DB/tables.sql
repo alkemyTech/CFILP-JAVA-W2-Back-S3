@@ -5,29 +5,20 @@ CREATE TABLE Usuario (
   email           TEXT NOT NULL UNIQUE,
   telefono        TEXT,
   fecha_creacion  TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  contrasenia     TEXT NOT NULL
-);
-
-CREATE TABLE Cliente (
-  id_cliente      INTEGER PRIMARY KEY,
-  FOREIGN KEY (id_cliente) REFERENCES Usuario(id_usuario)
-);
-
-CREATE TABLE Admin (
-  id_admin        INTEGER PRIMARY KEY,
-  FOREIGN KEY (id_admin) REFERENCES Usuario(id_usuario)
+  contrasenia     TEXT NOT NULL,
+  rol             TEXT NOT NULL DEFAULT 'cliente' CHECK (rol IN ('cliente', 'admin'))
 );
 
 CREATE TABLE Cuenta (
   numero_cuenta   TEXT PRIMARY KEY,
-  moneda          TEXT NOT NULL,
+  moneda          TEXT NOT NULL DEFAULT 'Ars',
   monto           NUMERIC NOT NULL DEFAULT 0.0,
-  fecha           DATE NOT NULL,
+  fecha           TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   alias           TEXT UNIQUE,
-  tipo            TEXT NOT NULL,
+  tipo            TEXT NOT NULL DEFAULT 'CA' CHECK (tipo IN ('CA', 'CC')),
   cvu             TEXT UNIQUE NOT NULL,
-  cliente_id      INTEGER NOT NULL,
-  FOREIGN KEY (cliente_id) REFERENCES Cliente(id_cliente)
+  usuario_id      INTEGER NOT NULL,
+  FOREIGN KEY (usuario_id) REFERENCES Usuario(id_usuario)
 );
 
 CREATE TABLE Tarjeta (
