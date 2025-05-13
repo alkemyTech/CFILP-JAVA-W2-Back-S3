@@ -1,5 +1,7 @@
 package com.AlkemyPocket.services;
 
+import com.AlkemyPocket.dto.TraerCuentaDTO;
+import com.AlkemyPocket.dto.UsuarioParaCuentaDTO;
 import com.AlkemyPocket.model.Cuenta;
 import com.AlkemyPocket.model.Usuario;
 import com.AlkemyPocket.repository.CuentaRepository;
@@ -45,9 +47,36 @@ public class CuentaService {
         return cuentaRepository.save(cuenta);
     }
 
-    public List<Cuenta> obtenerCuentas() {
-        return cuentaRepository.findAll();
-    }
+    public List<TraerCuentaDTO> obtenerCuentas() {
+        return cuentaRepository.findAll().stream()
+                .map(this::mapToDTO)
+                .toList();
+    };
+
+    private TraerCuentaDTO mapToDTO(Cuenta cuenta) {
+
+        Usuario usuario = cuenta.getUsuario();
+
+        UsuarioParaCuentaDTO usuarioParaCuenta = new UsuarioParaCuentaDTO(
+                usuario.getId(),
+                usuario.getNombre(),
+                usuario.getApellido(),
+                usuario.getEmail(),
+                usuario.getTelefono(),
+                usuario.getRol()
+        );
+
+        return new TraerCuentaDTO(
+                cuenta.getNumeroCuenta(),
+                cuenta.getMoneda(),
+                cuenta.getMonto(),
+                cuenta.getFecha(),
+                cuenta.getAlias(),
+                cuenta.getTipo(),
+                cuenta.getCvu(),
+                usuarioParaCuenta
+        );
+    };
 
     public Optional<Cuenta> obtenerCuentaPorNumero(String numeroCuenta) {
         return cuentaRepository.findById(numeroCuenta);

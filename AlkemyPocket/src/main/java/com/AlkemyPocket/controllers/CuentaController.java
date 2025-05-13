@@ -1,5 +1,6 @@
 package com.AlkemyPocket.controllers;
 
+import com.AlkemyPocket.dto.TraerCuentaDTO;
 import com.AlkemyPocket.model.Cuenta;
 import com.AlkemyPocket.services.CuentaService;
 import lombok.RequiredArgsConstructor;
@@ -22,7 +23,7 @@ public class CuentaController {
     }
 
     @GetMapping
-    public List<Cuenta> listarCuentas() {
+    public List<TraerCuentaDTO> listarCuentas() {
         return cuentaService.obtenerCuentas();
     }
 
