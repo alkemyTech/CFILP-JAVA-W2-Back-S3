@@ -1,7 +1,6 @@
 package com.AlkemyPocket.services;
 
 import com.AlkemyPocket.dto.ActualizarUsuarioDTO; // DATA TRANSFER OBJECT
-import com.AlkemyPocket.model.RolUsuario;
 import com.AlkemyPocket.model.Usuario;
 import com.AlkemyPocket.repository.UsuarioRepository;
 import jakarta.persistence.EntityNotFoundException;
