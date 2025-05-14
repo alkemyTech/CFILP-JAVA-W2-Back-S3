@@ -52,9 +52,8 @@ public class UsuarioService {
             throw new IllegalArgumentException("La contraseña es obligatoria");
         }
         Usuario nuevoUsuario = usuarioRepository.save(usuario);
-        cuentaService.crearCuenta(nuevoUsuario.getId(), null);
+        cuentaService.crearCuenta(nuevoUsuario.getId(), null, null); // Lo establecimos asi para que ni bien se cree un usuario automaticamente se cree una cuenta en Pesos para ese usuario.
         return nuevoUsuario;
-
     }
 
     public Usuario actualizarUsuario(Integer id, ActualizarUsuarioDTO usuarioActualizado) {

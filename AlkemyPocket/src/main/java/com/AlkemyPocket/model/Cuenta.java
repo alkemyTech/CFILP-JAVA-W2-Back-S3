@@ -6,10 +6,10 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
+@Data // El uso de Lombok permite la generacion automatica y "por detras" de constructores getters y setters.
+@NoArgsConstructor // El uso de Lombok permite la generacion automatica y "por detras" de constructores getters y setters.
+@AllArgsConstructor // El uso de Lombok permite la generacion automatica y "por detras" de constructores getters y setters.
+@Builder // El uso de Lombok permite la generacion automatica y "por detras" de constructores getters y setters.
 public class Cuenta {
 
     @Id
