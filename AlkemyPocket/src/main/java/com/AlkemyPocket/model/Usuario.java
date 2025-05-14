@@ -4,6 +4,7 @@ import jakarta.persistence.*; // Importa las anotaciones de JPA, para poder "dec
 import java.time.LocalDateTime; // Importa la clase para manejar fecha y hora.
 
 @Entity // Marca la clase como una ENTIDAD (una tabla en la base de datos).
+@Inheritance(strategy = InheritanceType.JOINED)
 @Table(name = "usuario") // Dice que la tabla de la base de datos se llama 'usuario'.
 public class Usuario {
 

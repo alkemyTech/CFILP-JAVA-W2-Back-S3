@@ -7,6 +7,8 @@ public class UsuarioDTO {
     private String email;
     private String telefono;
     private String contrasenia;
+    private boolean cliente;
+    private boolean admin;
 
     public String getNombre() {
         return nombre;
@@ -47,4 +49,6 @@ public class UsuarioDTO {
     public void setContrasenia(String contrasenia) {
         this.contrasenia = contrasenia;
     }
+
+    public boolean isCliente(){ return this.cliente; }
 }

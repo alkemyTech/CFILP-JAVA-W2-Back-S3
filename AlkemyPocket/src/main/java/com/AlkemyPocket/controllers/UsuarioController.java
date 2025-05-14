@@ -85,4 +85,9 @@ public class UsuarioController {
     public ResponseEntity<String> manejarErrores(Exception ex) {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Ocurrió un error: " + ex.getMessage());
     }
+
+    @PostMapping("/registro")
+    public void registrar(@RequestBody UsuarioDTO dto) {
+        usuarioService.registrarUsuario(dto);
+    }
 }
