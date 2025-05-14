@@ -30,6 +30,10 @@ public class Usuario {
     @Column(nullable = false)
     private String contrasenia;
 
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private RolUsuario rol = RolUsuario.cliente;
+
 
     // Siguen los constructores normales, getters y setters.
 
@@ -66,5 +70,14 @@ public class Usuario {
 
     public String getContrasenia() { return contrasenia; }
     public void setContrasenia(String contrasenia) { this.contrasenia = contrasenia; } // Recordar que Set contraseña deberia validar. Supongo que podriamos dejar la validacion de caracteres para el FRONT y la validación del contenido para el BACK.
+
+    public RolUsuario getRol() {
+        return rol;
+    }
+
+    public void setRol(RolUsuario rol) {
+        this.rol = rol;
+    }
+
 }
 

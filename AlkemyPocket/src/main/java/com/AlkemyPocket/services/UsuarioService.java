@@ -1,16 +1,12 @@
 package com.AlkemyPocket.services;
 
-import com.AlkemyPocket.dto.UsuarioDTO; // DATA TRANSFER OBJECT
-import com.AlkemyPocket.model.Cliente;
+import com.AlkemyPocket.dto.ActualizarUsuarioDTO;
 import com.AlkemyPocket.model.Usuario;
-import com.AlkemyPocket.repository.ClienteRepository;
 import com.AlkemyPocket.repository.UsuarioRepository;
 import jakarta.persistence.EntityNotFoundException;
-import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Service // Con esto indicamos que este es el servicio.
@@ -18,8 +14,6 @@ public class UsuarioService {
 
     @Autowired
     private UsuarioRepository usuarioRepository;
-    @Autowired
-    private ClienteRepository clienteRepository;
 
     public List<Usuario> obtenerTodos() {
         List<Usuario> lista = usuarioRepository.findAll();
@@ -57,7 +51,7 @@ public class UsuarioService {
         return usuarioRepository.save(usuario);
     }
 
-    public Usuario actualizarUsuario(Integer id, UsuarioDTO usuarioActualizado) {
+    public Usuario actualizarUsuario(Integer id, ActualizarUsuarioDTO usuarioActualizado) {
         return usuarioRepository.findById(id).map(usuario -> {
             if (usuarioActualizado.getNombre() != null) usuario.setNombre(usuarioActualizado.getNombre());
             if (usuarioActualizado.getApellido() != null) usuario.setApellido(usuarioActualizado.getApellido());
@@ -77,27 +71,5 @@ public class UsuarioService {
         } catch (Exception e) {
             throw new RuntimeException("Error al eliminar el usuario: " + e.getMessage());
         }
-    }
-
-    @Transactional
-    public Usuario registrarUsuario(UsuarioDTO dto) {
-        Usuario nuevoUsuario;
-
-        if (dto.isCliente()) {
-            nuevoUsuario = new Cliente();
-        }
-        else {
-            nuevoUsuario = new Usuario();
-        }
-
-        nuevoUsuario.setNombre(dto.getNombre());
-        nuevoUsuario.setApellido(dto.getApellido());
-        nuevoUsuario.setEmail(dto.getEmail());
-        nuevoUsuario.setTelefono(dto.getTelefono());
-        nuevoUsuario.setContrasenia(dto.getContrasenia());
-        nuevoUsuario.setFechaCreacion(LocalDateTime.now());
-
-        return usuarioRepository.save(nuevoUsuario); // Guardamos la única instancia creada
-        // Al cliente ser una generalización directa de usuario, hibernate ya nos ahorra el trabajo por detrás
     }
 }
