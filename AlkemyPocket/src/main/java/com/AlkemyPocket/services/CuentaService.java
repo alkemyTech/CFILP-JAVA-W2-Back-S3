@@ -6,6 +6,7 @@ import com.AlkemyPocket.model.Cuenta;
 import com.AlkemyPocket.model.Usuario;
 import com.AlkemyPocket.repository.CuentaRepository;
 import com.AlkemyPocket.repository.UsuarioRepository;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,8 +26,12 @@ public class CuentaService {
     @Autowired
     private UsuarioRepository usuarioRepository;
 
-    public Cuenta crearCuenta(Integer usuarioId, String tipo) {
-        Usuario usuario = usuarioRepository.findById(usuarioId)
+
+
+    // === CREACION DE CUENTA ===
+    // El unico problema que se podria presentar seria que el usuario pueda tener mas de dos cuentas, aunque no estaría totalmente mal.
+    public Cuenta crearCuenta(Integer usuarioId, String tipo, String moneda) {
+        Usuario usuario = usuarioRepository.findById(usuarioId) // Claramente cuando la cuenta se crea junto con el usuario el ID siempre se va a encontrar pero puede ocurrir que se cree una cuenta el Dolares luego para el usuario.
                 .orElseThrow(() -> new IllegalArgumentException("Usuario no encontrado"));
 
         String numeroCuenta = generarNumeroCuentaUnico();
@@ -35,7 +40,7 @@ public class CuentaService {
 
         Cuenta cuenta = Cuenta.builder()
                 .numeroCuenta(numeroCuenta)
-                .moneda("Ars")
+                .moneda(moneda != null && (moneda.equals("Ars") || moneda.equals("Dolar") || moneda.equals("Euro") || moneda.equals("Real"))  ? moneda : "Ars")
                 .monto(BigDecimal.ZERO)
                 .fecha(LocalDateTime.now())
                 .alias(alias)
@@ -47,12 +52,20 @@ public class CuentaService {
         return cuentaRepository.save(cuenta);
     }
 
+
+
+    // === TRAER TODAS LAS CUENTAS ===
     public List<TraerCuentaDTO> obtenerCuentas() {
-        return cuentaRepository.findAll().stream()
+        List<TraerCuentaDTO> cuentas = cuentaRepository.findAll().stream()
                 .map(this::mapToDTO)
                 .toList();
+        if (cuentas.isEmpty()){
+            throw new RuntimeException("No hay cuentas para ningun usuario registrado en Alkemy Pocket.");
+        } else {
+            return cuentas;
+        }
     };
-
+    // Dto para traer las cuentas.
     private TraerCuentaDTO mapToDTO(Cuenta cuenta) {
 
         Usuario usuario = cuenta.getUsuario();
@@ -78,12 +91,26 @@ public class CuentaService {
         );
     };
 
-    public Optional<Cuenta> obtenerCuentaPorNumero(String numeroCuenta) {
-        return cuentaRepository.findById(numeroCuenta);
+
+    // === TRAER CUENTA POR PK ===
+    public TraerCuentaDTO obtenerCuentaDTOporNumero(String numeroCuenta) {
+        Cuenta cuenta = cuentaRepository.findById(numeroCuenta)
+                .orElseThrow(() -> new EntityNotFoundException("Cuenta no encontrada con el numero " + numeroCuenta));
+
+        return mapToDTO(cuenta);
     }
 
+
+    // === ELIMINAR CUENTA POR PK ===
     public void eliminarCuenta(String numeroCuenta) {
-        cuentaRepository.deleteById(numeroCuenta);
+        if (!cuentaRepository.existsById(numeroCuenta)) {
+            throw new EntityNotFoundException("La cuenta con el numero " + numeroCuenta + " no existe");
+        }
+        try {
+            cuentaRepository.deleteById(numeroCuenta); //
+        } catch (Exception e) {
+            throw new RuntimeException("Error al eliminar la cuenta: " + e.getMessage());
+        }
     }
 
     // ==== Generadores ====
