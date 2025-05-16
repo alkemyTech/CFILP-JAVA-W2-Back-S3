@@ -1,46 +1,33 @@
-INSERT INTO Usuario (nombre, apellido, email, telefono, contrasenia) VALUES
-('Juan', 'Perez', 'juan.perez@email.com', '1122334455', 'contrasena123'),
-('Maria', 'Lopez', 'maria.lopez@email.com', '2233445566', 'clavesegura456'),
-('Carlos', 'Gomez', 'carlos.gomez@email.com', '3344556677', 'micontra789'),
-('Ana', 'Rodriguez', 'ana.rodriguez@email.com', '4455667788', 'password1234'),
-('Admin', 'Cliente', 'admin.cliente@bank.com', '9988776655', 'adminclientepass'), -- Este usuario será Admin y Cliente
-('Laura', 'Fernandez', 'laura.f@email.com', '5566778899', 'laurasegura'),
-('Pedro', 'Martinez', 'pedro.m@email.com', '6677889900', 'pedroclave');
-
-INSERT INTO Cliente (id_cliente) VALUES
-(1), -- Juan Perez
-(2), -- Maria Lopez
-(3), -- Carlos Gomez (Sin tarjetas asignadas)
-(4), -- Ana Rodriguez
-(5), -- Admin/Cliente
-(6), -- Laura Fernandez
-(7); -- Pedro Martinez (Sin tarjetas asignadas)
+INSERT INTO Usuario (id_usuario, nombre, apellido, email, telefono, contrasenia, rol) VALUES
+(1, 'Juan', 'Perez', 'juan.perez@email.com', '1122334455', 'contrasena123', 'admin'),
+(2, 'Maria', 'Lopez', 'maria.lopez@email.com', '2233445566', 'clavesegura456', 'cliente'),
+(3, 'Carlos', 'Gomez', 'carlos.gomez@email.com', '3344556677', 'micontra789', 'cliente'),
+(4, 'Ana', 'Rodriguez', 'ana.rodriguez@email.com', '4455667788', 'password1234', 'cliente'),
+(5, 'Admin', 'Cliente', 'admin.cliente@bank.com', '9988776655', 'adminclientepass', 'cliente'),
+(6, 'Laura', 'Fernandez', 'laura.f@email.com', '5566778899', 'laurasegura', 'admin'),
+(7, 'Pedro', 'Martinez', 'pedro.m@email.com', '6677889900', 'pedroclave', 'cliente');
 
 
-INSERT INTO Admin (id_admin) VALUES
-(5); -- Admin/Cliente
-
-
-INSERT INTO Cuenta (numero_cuenta, moneda, monto, fecha, alias, tipo, cvu, id_cliente) VALUES
-('001-123456/1', 'ARS', 160000.50, '2023-01-15', 'JUAN.PEREZ.CAJA', 'Caja de Ahorro', '0000000100000000000001', 1), -- Juan ARS CA (Deposito y Transferencia)
-('001-123456/2', 'USD', 260.75, '2023-01-15', 'JUAN.PEREZ.DOLAR', 'Caja de Ahorro', '0000000100000000000002', 1), -- Juan USD CA
-('002-987654/1', 'ARS', 540000.00, '2022-11-20', 'MARIA.LOPEZ.CC', 'Cuenta Corriente', '0000000200000000000001', 2), -- Maria ARS CC
-('003-112233/1', 'ARS', 1275.00, '2024-03-10', 'CARLOS.GOMEZ.CA', 'Caja de Ahorro', '0000000300000000000001', 3), -- Carlos ARS CA (Sin tarjetas)
-('004-445566/1', 'USD', 1500.00, '2023-05-01', 'ANA.RODRIGUEZ.DOLAR', 'Caja de Ahorro', '0000000400000000000001', 4), -- Ana USD CA
-('004-445566/2', 'ARS', 78000.00, '2023-05-01', 'ANA.RODRIGUEZ.CA', 'Caja de Ahorro', '0000000400000000000002', 4), -- Ana ARS CA (Con 3 tarjetas)
-('005-000111/1', 'ARS', 50000.00, '2024-04-25', 'ADMIN.CLIENTE.CA', 'Caja de Ahorro', '0000000500000000000001', 5), -- Admin/Cliente ARS CA
-('006-778899/1', 'ARS', 300000.00, '2024-01-05', 'LAURA.F.CA', 'Caja de Ahorro', '0000000600000000000001', 6), -- Laura ARS CA
-('007-112200/1', 'USD', 45.00, '2024-02-18', 'PEDRO.M.DOLAR', 'Caja de Ahorro', '0000000700000000000001', 7); -- Pedro USD CA (Sin tarjetas)
+INSERT INTO Cuenta (numero_cuenta, moneda, monto, fecha, alias, tipo, cvu, id_usuario) VALUES
+('001-123456/1', 'ARS', 160000.50, '2023-01-15', 'JUAN.PEREZ.CAJA', 'CA', '0000000100000000000001', 1), -- Original era 'Caja de Ahorro'
+('001-123456/2', 'USD', 260.75, '2023-01-15', 'JUAN.PEREZ.DOLAR', 'CA', '0000000100000000000002', 1), -- Original era 'Caja de Ahorro'
+('002-987654/1', 'ARS', 540000.00, '2022-11-20', 'MARIA.LOPEZ.CC', 'CC', '0000000200000000000001', 2), -- Original era 'Cuenta Corriente'
+('003-112233/1', 'ARS', 1275.00, '2024-03-10', 'CARLOS.GOMEZ.CA', 'CA', '0000000300000000000001', 3), -- Original era 'Caja de Ahorro'
+('004-445566/1', 'USD', 1500.00, '2023-05-01', 'ANA.RODRIGUEZ.DOLAR', 'CA', '0000000400000000000001', 4), -- Original era 'Caja de Ahorro'
+('004-445566/2', 'ARS', 78000.00, '2023-05-01', 'ANA.RODRIGUEZ.CA', 'CA', '0000000400000000000002', 4), -- Original era 'Caja de Ahorro'
+('005-000111/1', 'ARS', 50000.00, '2024-04-25', 'ADMIN.CLIENTE.CA', 'CA', '0000000500000000000001', 5), -- Original era 'Caja de Ahorro'
+('006-778899/1', 'ARS', 300000.00, '2024-01-05', 'LAURA.F.CA', 'CA', '0000000600000000000001', 6), -- Original era 'Caja de Ahorro'
+('007-112200/1', 'USD', 45.00, '2024-02-18', 'PEDRO.M.DOLAR', 'CA', '0000000700000000000001', 7); -- Original era 'Caja de Ahorro'
 
 
 INSERT INTO Tarjeta (numero_tarjeta, codigo_seguridad, fecha_vencimiento, compania, tipo, fecha_emision, particular, propia) VALUES
-('4000111122223333', '123', '2028-12-31', 'VISA', 'Credito', '2022-12-01', 'JUAN PEREZ', 1), -- Juan (Propia)
-('5000444455556666', '456', '2027-11-30', 'Mastercard', 'Debito', '2021-11-15', 'MARIA LOPEZ', 1), -- Maria (Propia)
-('4000777788889999', '789', '2029-10-31', 'VISA', 'Debito', '2023-09-20', 'ANA RODRIGUEZ', 1), -- Ana (Propia)
-('5000111100009999', '012', '2026-09-30', 'Mastercard', 'Credito', '2020-08-10', 'ADMIN CLIENTE', 1), -- Admin/Cliente (Propia)
-('6000333344445555', '345', '2030-08-31', 'AMEX', 'Credito', '2024-07-01', 'LAURA FERNANDEZ', 1), -- Laura (Propia)
-('5111222233334444', '901', '2026-06-30', 'Mastercard', 'Credito', '2021-05-15', 'ANA RODRIGUEZ', 0), -- Ana (Ajena 1)
-('4222333344445555', '234', '2025-05-31', 'VISA', 'Debito', '2020-04-01', 'ANA RODRIGUEZ', 0); -- Ana (Ajena 2)
+('4000111122223333', '123', '2028-12-31', 'VISA', 'Credito', '2022-12-01', 'JUAN PEREZ', TRUE), -- Juan (Propia)
+('5000444455556666', '456', '2027-11-30', 'Mastercard', 'Debito', '2021-11-15', 'MARIA LOPEZ', TRUE), -- Maria (Propia)
+('4000777788889999', '789', '2029-10-31', 'VISA', 'Debito', '2023-09-20', 'ANA RODRIGUEZ', TRUE), -- Ana (Propia)
+('5000111100009999', '012', '2026-09-30', 'Mastercard', 'Credito', '2020-08-10', 'ADMIN CLIENTE', TRUE), -- Admin/Cliente (Propia)
+('6000333344445555', '345', '2030-08-31', 'AMEX', 'Credito', '2024-07-01', 'LAURA FERNANDEZ', TRUE), -- Laura (Propia)
+('5111222233334444', '901', '2026-06-30', 'Mastercard', 'Credito', '2021-05-15', 'ANA RODRIGUEZ', FALSE), -- Ana (Ajena 1)
+('4222333344445555', '234', '2025-05-31', 'VISA', 'Debito', '2020-04-01', 'ANA RODRIGUEZ', FALSE); -- Ana (Ajena 2)
 
 
 INSERT INTO Cuenta_Tarjeta (numero_cuenta, numero_tarjeta) VALUES
