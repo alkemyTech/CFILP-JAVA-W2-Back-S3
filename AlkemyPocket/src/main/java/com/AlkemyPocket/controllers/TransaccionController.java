@@ -27,9 +27,14 @@ public class TransaccionController {
 
     @Operation(summary = "Obtener todas las transacciones")
     @GetMapping
-    public ResponseEntity<List<Transaccion>> listarTransacciones() {
+    public ResponseEntity<List<TransaccionDTO>> listarTransacciones() {
         List<Transaccion> transacciones = transaccionService.listarTransacciones();
-        return ResponseEntity.ok(transacciones);
+
+        List<TransaccionDTO> dtoList = transacciones.stream()
+                .map(this::convertirADTO)
+                .collect(Collectors.toList());
+
+        return ResponseEntity.ok(dtoList);
     }
 
     // http://localhost:8080/AlkemyPocket/transacciones/traer-por?numeroCuenta=001-123456/1 -> Trea transacciones asociadas a ese num-cuenta
