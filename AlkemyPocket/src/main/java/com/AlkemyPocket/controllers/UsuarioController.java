@@ -1,6 +1,7 @@
 package com.AlkemyPocket.controllers;
 
 import com.AlkemyPocket.dto.ActualizarUsuarioDTO;
+import com.AlkemyPocket.dto.CrearUsuarioDTO;
 import com.AlkemyPocket.model.Usuario; // Importa la clase usuario porque manipula objetos "Usuario".
 import com.AlkemyPocket.services.UsuarioService; // Importa la clase UsuarioService porque llama a sus métodos y esta importación permite usarlo como tipo de dato. (Ver despues la inyección).
 import io.swagger.v3.oas.annotations.Operation;
@@ -52,7 +53,7 @@ public class UsuarioController {
 
     @Operation(summary = "Crear un usuario")
     @PostMapping // Declara que si el metodo es POST a la base de ruta a secas se ejecuta el siguiente metodo.
-    public ResponseEntity<?> crearUsuario(@RequestBody Usuario usuario) { // La notación significa que recibe un objeto tipo Usuario en el cuerpo de la petición y lo convierte en un JSON.
+    public ResponseEntity<?> crearUsuario(@RequestBody CrearUsuarioDTO usuario) { // La notación significa que recibe un objeto tipo Usuario en el cuerpo de la petición y lo convierte en un JSON.
         try {
             return ResponseEntity.status(HttpStatus.CREATED).body(usuarioService.crearUsuario(usuario));
         } catch (IllegalArgumentException e) {

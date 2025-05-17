@@ -1,12 +1,14 @@
 package com.AlkemyPocket.services;
 
 import com.AlkemyPocket.dto.ActualizarUsuarioDTO; // DATA TRANSFER OBJECT
+import com.AlkemyPocket.dto.CrearUsuarioDTO;
 import com.AlkemyPocket.model.Usuario;
 import com.AlkemyPocket.repository.UsuarioRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service // Con esto indicamos que este es el servicio.
@@ -32,7 +34,7 @@ public class UsuarioService {
                 .orElseThrow(() -> new IllegalArgumentException("error"));
     }
 
-    public Usuario crearUsuario(Usuario usuario) {
+    public Usuario crearUsuario(CrearUsuarioDTO usuario) {
         if (usuario.getNombre() == null || usuario.getNombre().isBlank()) {
             throw new IllegalArgumentException("El nombre es obligatorio");
         }
@@ -45,13 +47,21 @@ public class UsuarioService {
         if (usuario.getTelefono() == null || usuario.getTelefono().isBlank()) {
             throw new IllegalArgumentException("El teléfono es obligatorio");
         }
-        if (usuario.getFechaCreacion() == null) {
-            throw new IllegalArgumentException("La fecha de creación es obligatoria");
-        }
         if (usuario.getContrasenia() == null || usuario.getContrasenia().isBlank()) {
             throw new IllegalArgumentException("La contraseña es obligatoria");
         }
-        Usuario nuevoUsuario = usuarioRepository.save(usuario);
+
+        // Generamos usuario
+        Usuario usuario1  = new Usuario();
+
+        usuario1.setNombre(usuario.getNombre());
+        usuario1.setApellido(usuario.getApellido());
+        usuario1.setContrasenia(usuario.getContrasenia());
+        usuario1.setEmail(usuario.getEmail());
+        usuario1.setTelefono(usuario.getTelefono());
+        usuario1.setFechaCreacion(LocalDateTime.now());
+
+        Usuario nuevoUsuario = usuarioRepository.save(usuario1);
         cuentaService.crearCuenta(nuevoUsuario.getId(), null, null); // Lo establecimos asi para que ni bien se cree un usuario automaticamente se cree una cuenta en Pesos para ese usuario.
         return nuevoUsuario;
     }
