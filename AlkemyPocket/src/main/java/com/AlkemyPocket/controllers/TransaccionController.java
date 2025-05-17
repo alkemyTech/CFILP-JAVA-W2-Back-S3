@@ -6,10 +6,14 @@ import com.AlkemyPocket.repository.CuentaRepository;
 import com.AlkemyPocket.repository.TransaccionRepository;
 import com.AlkemyPocket.services.TransaccionService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.ErrorResponse;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
@@ -59,7 +63,16 @@ public class TransaccionController {
         return dto;
     }
 
-    @Operation(summary = "Transferir dinero a una cuenta")
+    @Operation(
+            summary = "Transferir dinero a una cuenta",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "Transferencia exitosa",
+                            content = @Content(schema = @Schema(implementation = TransaccionDTO.class))
+                    )
+            }
+    )
     @PostMapping("/transferir")
     public ResponseEntity<?> transferir(@RequestParam String origen,
                                         @RequestParam String destino,
@@ -72,30 +85,46 @@ public class TransaccionController {
         }
     }
 
-    @Operation(summary = "Depositar dinero en una cuenta")
+    @Operation(
+            summary = "Depositar dinero en una cuenta",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "Depósito exitoso",
+                            content = @Content(schema = @Schema(implementation = TransaccionDTO.class))
+                    )
+            }
+    )
     @PostMapping("/depositar")
     public ResponseEntity<?> depositar(@RequestParam String destino,
-                                       @RequestParam BigDecimal monto){
-        try{
+                                       @RequestParam BigDecimal monto) {
+        try {
             Deposito deposito = transaccionService.realizarDeposito(destino, monto);
             return ResponseEntity.ok(convertirADTO(deposito));
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
-
     }
 
-    @Operation(summary = "Extraer dinero de una cuenta")
+    @Operation(
+            summary = "Extraer dinero de una cuenta",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "Extracción exitosa",
+                            content = @Content(schema = @Schema(implementation = TransaccionDTO.class))
+                    )
+            }
+    )
     @PostMapping("/extraer")
     public ResponseEntity<?> extraer(@RequestParam String origen,
-                                     @RequestParam BigDecimal monto){
-        try{
+                                     @RequestParam BigDecimal monto) {
+        try {
             Extraccion extraccion = transaccionService.realizarExtraccion(origen, monto);
             return ResponseEntity.ok(convertirADTO(extraccion));
-        }catch (RuntimeException e){
+        } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
-
     }
 
 }
