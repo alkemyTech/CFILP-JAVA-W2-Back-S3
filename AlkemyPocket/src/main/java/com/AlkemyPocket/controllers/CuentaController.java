@@ -1,5 +1,6 @@
 package com.AlkemyPocket.controllers;
 
+import com.AlkemyPocket.dto.ContactosFrecuentesDTO;
 import com.AlkemyPocket.dto.TraerCuentaDTO;
 import com.AlkemyPocket.services.CuentaService;
 import jakarta.persistence.EntityNotFoundException;
@@ -67,5 +68,13 @@ public class CuentaController {
     @ExceptionHandler(Exception.class)
     public ResponseEntity<String> manejarErrores(Exception ex) {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Ocurrió un error: " + ex.getMessage());
+    }
+
+    // Ver contactos frecuentes
+
+    @GetMapping("/contactos-frecuentes/{idUsuario}")
+    public ResponseEntity<List<ContactosFrecuentesDTO>> obtenerContactosFrecuentes(@PathVariable Integer idUsuario) {
+        List<ContactosFrecuentesDTO> contactos = cuentaService.obtenerContactosFrecuentes(idUsuario);
+        return ResponseEntity.ok(contactos);
     }
 }
