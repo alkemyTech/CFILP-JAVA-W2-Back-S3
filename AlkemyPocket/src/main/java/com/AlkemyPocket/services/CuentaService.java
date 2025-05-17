@@ -1,5 +1,6 @@
 package com.AlkemyPocket.services;
 
+import com.AlkemyPocket.dto.ContactosFrecuentesDTO;
 import com.AlkemyPocket.dto.TraerCuentaDTO;
 import com.AlkemyPocket.dto.UsuarioParaCuentaDTO;
 import com.AlkemyPocket.model.Cuenta;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Random;
 
@@ -156,5 +158,9 @@ public class CuentaService {
                 palabras[random.nextInt(palabras.length)] +
                 "." +
                 (random.nextInt(900) + 100);
+    }
+
+    public List<ContactosFrecuentesDTO> obtenerContactosFrecuentes(Integer idUsuario) {
+        return cuentaRepository.consultarContactosFrecuentes(idUsuario);
     }
 }
