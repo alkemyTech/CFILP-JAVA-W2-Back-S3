@@ -12,4 +12,12 @@ public class Extraccion extends Transaccion{
     @ManyToOne
     @JoinColumn(name = "cuenta_origen", referencedColumnName = "numero_cuenta", nullable = false)
     private Cuenta cuentaOrigen;
+
+    public Cuenta getCuentaOrigen() {
+        return cuentaOrigen;
+    }
+
+    public void setCuentaOrigen(Cuenta cuentaOrigen) {
+        this.cuentaOrigen = cuentaOrigen;
+    }
 }
