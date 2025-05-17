@@ -72,4 +72,16 @@ public class TransaccionController {
 
     }
 
+    @PostMapping("/extraer")
+    public ResponseEntity<?> extraer(@RequestParam String origen,
+                                     @RequestParam BigDecimal monto){
+        try{
+            Extraccion extraccion = transaccionService.realizarExtraccion(origen, monto);
+            return ResponseEntity.ok(convertirADTO(extraccion));
+        }catch (RuntimeException e){
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+
+    }
+
 }
