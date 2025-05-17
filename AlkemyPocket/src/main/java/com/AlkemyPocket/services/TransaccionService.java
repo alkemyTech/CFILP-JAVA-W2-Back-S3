@@ -21,7 +21,7 @@ public class TransaccionService {
     private ExtraccionRepository extraccionRepo;
 
     @Autowired
-    private DepositoRepository depositoRepo;
+    private DepositoRepository depositoRepository;
 
     @Autowired
     private TransferenciaRepository transferenciaRepository;
@@ -42,7 +42,7 @@ public class TransaccionService {
         List<Transaccion> resultado = new ArrayList<>();
 
         resultado.addAll(extraccionRepo.findByCuentaOrigen_NumeroCuenta(numeroCuenta));
-        resultado.addAll(depositoRepo.findByCuentaDestino_NumeroCuenta(numeroCuenta));
+        resultado.addAll(depositoRepository.findByCuentaDestino_NumeroCuenta(numeroCuenta));
         resultado.addAll(transferenciaRepository.findByCuentaOrigen_NumeroCuentaOrCuentaDestino_NumeroCuenta(numeroCuenta, numeroCuenta));
 
         return resultado;
@@ -83,5 +83,29 @@ public class TransaccionService {
         transferencia.setEstado(EstadoTransaccion.Completada);
 
         return transferenciaRepository.save(transferencia);
+    }
+
+    @Transactional
+    public Deposito realizarDeposito(String destino, BigDecimal monto){
+        Cuenta CuentaDestino = cuentaRepository.findByNumeroCuenta(destino)
+                .orElseThrow(() -> new RuntimeException("Cuenta destino no existe"));
+
+        if(monto.compareTo(BigDecimal.ZERO) <= 0){
+            throw new RuntimeException("No puedes ingresar un monto no positivo o nulo");
+        }
+
+        // Guardamos el dinero en la cuenta
+        CuentaDestino.setMonto(CuentaDestino.getMonto().add(monto));
+
+        // Creamos el deposito
+        Deposito deposito = new Deposito();
+
+        deposito.setCuentaDestino(CuentaDestino);
+        deposito.setMonto(monto);
+        deposito.setDescripcion("Deposito de " + monto + "$ en " + destino);
+        deposito.setFecha(LocalDateTime.now());
+        deposito.setEstado(EstadoTransaccion.Completada);
+
+        return depositoRepository.save(deposito);
     }
 }
