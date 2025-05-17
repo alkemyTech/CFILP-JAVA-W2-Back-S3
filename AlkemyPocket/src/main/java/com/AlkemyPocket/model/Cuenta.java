@@ -1,5 +1,6 @@
 package com.AlkemyPocket.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
 import java.math.BigDecimal;
@@ -10,9 +11,11 @@ import java.time.LocalDateTime;
 @NoArgsConstructor // El uso de Lombok permite la generacion automatica y "por detras" de constructores getters y setters.
 @AllArgsConstructor // El uso de Lombok permite la generacion automatica y "por detras" de constructores getters y setters.
 @Builder // El uso de Lombok permite la generacion automatica y "por detras" de constructores getters y setters.
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Cuenta {
 
     @Id
+    @Column(name = "numero_cuenta")
     private String numeroCuenta;
 
     @Column(nullable = false, columnDefinition = "TEXT DEFAULT 'Ars'")
@@ -34,6 +37,15 @@ public class Cuenta {
     private String cvu;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "usuario_id", nullable = false)
+    @JoinColumn(name = "id_usuario", nullable = false)
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private Usuario usuario;
+
+    public BigDecimal getMonto() {
+        return monto;
+    }
+
+    public void setMonto(BigDecimal monto) {
+        this.monto = monto;
+    }
 }
