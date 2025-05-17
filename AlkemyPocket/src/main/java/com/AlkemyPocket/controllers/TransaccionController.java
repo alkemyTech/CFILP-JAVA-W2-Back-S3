@@ -5,6 +5,8 @@ import com.AlkemyPocket.model.*;
 import com.AlkemyPocket.repository.CuentaRepository;
 import com.AlkemyPocket.repository.TransaccionRepository;
 import com.AlkemyPocket.services.TransaccionService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +17,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Tag(name = "Transacciones", description = "Operaciones de transacciones")
 @RestController
 @RequestMapping("/AlkemyPocket/transacciones")
 public class TransaccionController {
@@ -22,6 +25,7 @@ public class TransaccionController {
     @Autowired
     private TransaccionService transaccionService;
 
+    @Operation(summary = "Obtener todas las transacciones")
     @GetMapping
     public ResponseEntity<List<Transaccion>> listarTransacciones() {
         List<Transaccion> transacciones = transaccionService.listarTransacciones();
@@ -29,6 +33,8 @@ public class TransaccionController {
     }
 
     // http://localhost:8080/AlkemyPocket/transacciones/traer-por?numeroCuenta=001-123456/1 -> Trea transacciones asociadas a ese num-cuenta
+
+    @Operation(summary = "Obtener transacciones por cuenta")
     @GetMapping("/traer-por")
     public List<TransaccionDTO> getTransaccionesPorCuenta(@RequestParam  String numeroCuenta) {
         List<Transaccion> transacciones = transaccionService.obtenerTransaccionesPorCuenta(numeroCuenta);
@@ -48,6 +54,7 @@ public class TransaccionController {
         return dto;
     }
 
+    @Operation(summary = "Transferir dinero a una cuenta")
     @PostMapping("/transferir")
     public ResponseEntity<?> transferir(@RequestParam String origen,
                                         @RequestParam String destino,
@@ -60,6 +67,7 @@ public class TransaccionController {
         }
     }
 
+    @Operation(summary = "Depositar dinero en una cuenta")
     @PostMapping("/depositar")
     public ResponseEntity<?> depositar(@RequestParam String destino,
                                        @RequestParam BigDecimal monto){
@@ -72,6 +80,7 @@ public class TransaccionController {
 
     }
 
+    @Operation(summary = "Extraer dinero de una cuenta")
     @PostMapping("/extraer")
     public ResponseEntity<?> extraer(@RequestParam String origen,
                                      @RequestParam BigDecimal monto){

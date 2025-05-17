@@ -1,9 +1,19 @@
 package com.AlkemyPocket.dto;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+
 public class ContactosFrecuentesDTO {
+
+    @Schema(example = "juan.perez")
     private String alias;
+
+    @Schema(example = "0001234500001234567890")
     private String cvu;
+
+    @Schema(example = "Juan")
     private String nombre;
+
+    @Schema(example = "Pérez")
     private String apellido;
 
     public ContactosFrecuentesDTO(String alias, String cvu, String nombre, String apellido) {

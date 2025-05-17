@@ -3,6 +3,8 @@ package com.AlkemyPocket.controllers;
 import com.AlkemyPocket.dto.ContactosFrecuentesDTO;
 import com.AlkemyPocket.dto.TraerCuentaDTO;
 import com.AlkemyPocket.services.CuentaService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@Tag(name = "Cuentas")
 @RestController
 @RequestMapping("/AlkemyPocket/cuentas")
 @RequiredArgsConstructor
@@ -22,6 +25,7 @@ public class CuentaController {
 
     // Creacion de una cuenta AUTOMATICA y NO AUTOMATICA.
 
+    @Operation(summary = "Crear cuenta")
     @PostMapping
     public ResponseEntity<?> crearCuenta(@RequestParam Integer usuarioId, @RequestParam(required = false) String tipo, @RequestParam (required = false) String moneda) {
         try {
@@ -34,6 +38,7 @@ public class CuentaController {
 
     // Traer TODAS las cuentas con manejo de errores que pueden venir del servicio.
 
+    @Operation(summary = "Obtener todas las cuentas")
     @GetMapping
     public ResponseEntity<List<TraerCuentaDTO>> listarCuentas() {
         List <TraerCuentaDTO> cuentas = cuentaService.obtenerCuentas();
@@ -46,6 +51,7 @@ public class CuentaController {
 
     // Traer una sola cuenta con manejo de excepción directamente en el controlador.
 
+    @Operation(summary = "Obtener cuenta por numero")
     @GetMapping("/{numeroCuenta}")
     public ResponseEntity<TraerCuentaDTO> obtenerCuenta(@PathVariable String numeroCuenta) {
         TraerCuentaDTO cuenta = cuentaService.obtenerCuentaDTOporNumero(numeroCuenta);
@@ -54,6 +60,7 @@ public class CuentaController {
 
     // Eliminacion de cuentas con errores que pueden venir desde el servicio.
 
+    @Operation(summary = "Eliminar cuenta")
     @DeleteMapping("/{numeroCuenta}")
     public ResponseEntity<String> eliminarCuenta(@PathVariable String numeroCuenta) {
         cuentaService.eliminarCuenta(numeroCuenta);
@@ -72,6 +79,7 @@ public class CuentaController {
 
     // Ver contactos frecuentes
 
+    @Operation(summary = "Obtener contactos frequentes por ID")
     @GetMapping("/contactos-frecuentes/{idUsuario}")
     public ResponseEntity<List<ContactosFrecuentesDTO>> obtenerContactosFrecuentes(@PathVariable Integer idUsuario) {
         List<ContactosFrecuentesDTO> contactos = cuentaService.obtenerContactosFrecuentes(idUsuario);
