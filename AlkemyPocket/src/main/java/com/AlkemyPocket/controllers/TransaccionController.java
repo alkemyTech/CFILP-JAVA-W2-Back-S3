@@ -76,9 +76,10 @@ public class TransaccionController {
     @PostMapping("/transferir")
     public ResponseEntity<?> transferir(@RequestParam String origen,
                                         @RequestParam String destino,
-                                        @RequestParam BigDecimal monto) {
+                                        @RequestParam BigDecimal monto,
+                                        @RequestParam(required = false) String descripcion) {
         try {
-            Transferencia transferencia = transaccionService.realizarTransferencia(origen, destino, monto);
+            Transferencia transferencia = transaccionService.realizarTransferencia(origen, destino, monto, descripcion);
             return ResponseEntity.ok(convertirADTO(transferencia));
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -97,9 +98,10 @@ public class TransaccionController {
     )
     @PostMapping("/depositar")
     public ResponseEntity<?> depositar(@RequestParam String destino,
-                                       @RequestParam BigDecimal monto) {
+                                       @RequestParam BigDecimal monto,
+                                       @RequestParam(required = false) String descripcion) {
         try {
-            Deposito deposito = transaccionService.realizarDeposito(destino, monto);
+            Deposito deposito = transaccionService.realizarDeposito(destino, monto, descripcion);
             return ResponseEntity.ok(convertirADTO(deposito));
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -118,9 +120,10 @@ public class TransaccionController {
     )
     @PostMapping("/extraer")
     public ResponseEntity<?> extraer(@RequestParam String origen,
-                                     @RequestParam BigDecimal monto) {
+                                     @RequestParam BigDecimal monto,
+                                     @RequestParam(required = false) String descripcion) {
         try {
-            Extraccion extraccion = transaccionService.realizarExtraccion(origen, monto);
+            Extraccion extraccion = transaccionService.realizarExtraccion(origen, monto, descripcion);
             return ResponseEntity.ok(convertirADTO(extraccion));
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(e.getMessage());

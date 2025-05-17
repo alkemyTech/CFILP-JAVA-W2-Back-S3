@@ -49,7 +49,7 @@ public class TransaccionService {
     }
 
     @Transactional
-    public Transferencia realizarTransferencia(String nroCuentaOrigen, String nroCuentaDestino, BigDecimal monto) {
+    public Transferencia realizarTransferencia(String nroCuentaOrigen, String nroCuentaDestino, BigDecimal monto, String descripcion) {
 
         Cuenta cuentaOrigen = cuentaRepository.findByNumeroCuenta(nroCuentaOrigen)
                 .orElseThrow(() -> new RuntimeException("Cuenta origen no existe"));
@@ -65,6 +65,10 @@ public class TransaccionService {
             throw new RuntimeException("Saldo insuficiente en cuenta origen");
         }
 
+        String descripcionTransferencia = (descripcion == null || descripcion.isBlank())
+            ? "Transferencia de " + nroCuentaOrigen + " a " + nroCuentaDestino
+            : descripcion;
+
         // Para restar y sumar:
         cuentaOrigen.setMonto(cuentaOrigen.getMonto().subtract(monto));
         cuentaDestino.setMonto(cuentaDestino.getMonto().add(monto));
@@ -78,7 +82,7 @@ public class TransaccionService {
         transferencia.setCuentaOrigen(cuentaOrigen);
         transferencia.setCuentaDestino(cuentaDestino);
         transferencia.setMonto(monto);
-        transferencia.setDescripcion("Transferencia de " + nroCuentaOrigen + " a " + nroCuentaDestino);
+        transferencia.setDescripcion(descripcionTransferencia);
         transferencia.setFecha(LocalDateTime.now());
         transferencia.setEstado(EstadoTransaccion.Completada);
 
@@ -86,13 +90,18 @@ public class TransaccionService {
     }
 
     @Transactional
-    public Deposito realizarDeposito(String destino, BigDecimal monto){
+    public Deposito realizarDeposito(String destino, BigDecimal monto, String descripcion){
         Cuenta CuentaDestino = cuentaRepository.findByNumeroCuenta(destino)
                 .orElseThrow(() -> new RuntimeException("Cuenta destino no existe"));
 
         if(monto.compareTo(BigDecimal.ZERO) <= 0){
             throw new RuntimeException("No puedes ingresar un monto no positivo o nulo");
         }
+
+        String descripcionDeposito = (descripcion == null || descripcion.isBlank())
+            ? "Deposito de " + monto + "$ en " + destino
+            : descripcion;
+
 
         // Guardamos el dinero en la cuenta
         CuentaDestino.setMonto(CuentaDestino.getMonto().add(monto));
@@ -102,7 +111,7 @@ public class TransaccionService {
 
         deposito.setCuentaDestino(CuentaDestino);
         deposito.setMonto(monto);
-        deposito.setDescripcion("Deposito de " + monto + "$ en " + destino);
+        deposito.setDescripcion(descripcionDeposito);
         deposito.setFecha(LocalDateTime.now());
         deposito.setEstado(EstadoTransaccion.Completada);
 
@@ -110,7 +119,7 @@ public class TransaccionService {
     }
 
     @Transactional
-    public Extraccion realizarExtraccion(String origen, BigDecimal monto){
+    public Extraccion realizarExtraccion(String origen, BigDecimal monto, String descripcion){
         Cuenta cuentaOrigen = cuentaRepository.findByNumeroCuenta(origen)
                 .orElseThrow(() -> new RuntimeException("Cuenta origen no existe"));
 
@@ -122,6 +131,10 @@ public class TransaccionService {
             throw new RuntimeException("No puedes extraer un monto que no tienes -.-");
         }
 
+        String descripcionExtraccion = (descripcion == null || descripcion.isBlank())
+            ? "Extraccion de " + monto + "$ en " + origen
+            : descripcion;
+
         // Extraemos el dinero de la cuenta
         cuentaOrigen.setMonto(cuentaOrigen.getMonto().subtract(monto));
 
@@ -130,7 +143,7 @@ public class TransaccionService {
 
         extraccion.setMonto(monto);
         extraccion.setCuentaOrigen(cuentaOrigen);
-        extraccion.setDescripcion("Extraccion de " + monto + "$ en " + origen);
+        extraccion.setDescripcion(descripcionExtraccion);
         extraccion.setFecha(LocalDateTime.now());
         extraccion.setEstado(EstadoTransaccion.Completada);
 
