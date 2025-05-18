@@ -29,7 +29,7 @@ CREATE TABLE Tarjeta (
   tipo              TEXT NOT NULL,
   fecha_emision     DATE NOT NULL,
   particular        TEXT NOT NULL,
-  propia            BOOLEAN NOT NULL DEFAULT TRUE
+  propia            TEXT NOT NULL DEFAULT PROPIA
 );
 
 CREATE TABLE Cuenta_Tarjeta (
