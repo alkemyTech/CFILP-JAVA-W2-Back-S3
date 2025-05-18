@@ -7,7 +7,7 @@ CREATE TABLE Usuario (
   fecha_creacion  TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   contrasenia     TEXT NOT NULL,
   rol             TEXT NOT NULL DEFAULT 'cliente' CHECK (rol IN ('cliente', 'admin'))
-);
+); 
 
 CREATE TABLE Cuenta (
   numero_cuenta   TEXT PRIMARY KEY,
