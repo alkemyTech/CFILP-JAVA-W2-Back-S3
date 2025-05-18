@@ -7,7 +7,7 @@ CREATE TABLE Usuario (
   fecha_creacion  TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   contrasenia     TEXT NOT NULL,
   rol             TEXT NOT NULL DEFAULT 'cliente' CHECK (rol IN ('cliente', 'admin'))
-); 
+);
 
 CREATE TABLE Cuenta (
   numero_cuenta   TEXT PRIMARY KEY,
@@ -49,14 +49,14 @@ CREATE TABLE Transaccion (
 );
 
 CREATE TABLE Deposito (
-  id_transaccion     INTEGER PRIMARY KEY,
+  id_transaccion  INTEGER PRIMARY KEY,
   cuenta_destino  TEXT NOT NULL,
   FOREIGN KEY (id_transaccion) REFERENCES Transaccion(id_transaccion),
   FOREIGN KEY (cuenta_destino) REFERENCES Cuenta(numero_cuenta)
 );
 
 CREATE TABLE Extraccion (
-  id_transaccion   INTEGER PRIMARY KEY,
+  id_transaccion  INTEGER PRIMARY KEY,
   cuenta_origen   TEXT NOT NULL,
   FOREIGN KEY (id_transaccion) REFERENCES Transaccion(id_transaccion),
   FOREIGN KEY (cuenta_origen) REFERENCES Cuenta(numero_cuenta)
