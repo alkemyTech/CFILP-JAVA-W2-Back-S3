@@ -123,4 +123,4 @@ BEGIN TRANSACTION;
 DELETE FROM Cuenta WHERE id_cliente = ?;
 DELETE FROM Cliente WHERE id_cliente = ?;
 DELETE FROM Usuario WHERE id_cliente = ?
-COMMIT; 
+COMMIT;
