@@ -55,8 +55,18 @@ public class CuentaService {
     }
 
 
+    // === TRAER TODAS LAS CUENTAS SIN INFORMACION SENSIBLE ===
+    public List<Cuenta> obtenerTodasLasCuentas() {
+        List<Cuenta> cuentas = cuentaRepository.findAll();
+        if (cuentas.isEmpty()){
+            throw new RuntimeException("No hay cuentas para ningun usuario registrado en Alkemy Pocket.");
+        } else {
+            return cuentas;
+        }
+    }
 
-    // === TRAER TODAS LAS CUENTAS ===
+
+    // === TRAER TODAS LAS CUENTAS SIN INFORMACION SENSIBLE ===
     public List<TraerCuentaDTO> obtenerCuentas() {
         List<TraerCuentaDTO> cuentas = cuentaRepository.findAll().stream()
                 .map(this::mapToDTO)
@@ -94,7 +104,7 @@ public class CuentaService {
     };
 
 
-    // === TRAER CUENTA POR PK ===
+    // === TRAER CUENTA POR PK SIN INFORMACION SENSIBLE ===
     public TraerCuentaDTO obtenerCuentaDTOporNumero(String numeroCuenta) {
         Cuenta cuenta = cuentaRepository.findById(numeroCuenta)
                 .orElseThrow(() -> new EntityNotFoundException("Cuenta no encontrada con el numero " + numeroCuenta));
@@ -161,6 +171,11 @@ public class CuentaService {
     }
 
     public List<ContactosFrecuentesDTO> obtenerContactosFrecuentes(Integer idUsuario) {
-        return cuentaRepository.consultarContactosFrecuentes(idUsuario);
+        List<ContactosFrecuentesDTO> contactos = cuentaRepository.consultarContactosFrecuentes(idUsuario);
+        if (contactos.isEmpty()){
+            throw new RuntimeException("No hay contactos frecuentes para este Usuario.");
+        } else {
+            return contactos;
+        }
     }
 }

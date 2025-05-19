@@ -2,6 +2,7 @@ package com.AlkemyPocket.controllers;
 
 import com.AlkemyPocket.dto.ContactosFrecuentesDTO;
 import com.AlkemyPocket.dto.TraerCuentaDTO;
+import com.AlkemyPocket.model.Cuenta;
 import com.AlkemyPocket.services.CuentaService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -23,6 +24,9 @@ public class CuentaController {
     @Autowired
     private CuentaService cuentaService;
 
+
+
+
     // Creacion de una cuenta AUTOMATICA y NO AUTOMATICA.
 
     @Operation(summary = "Crear cuenta")
@@ -36,7 +40,20 @@ public class CuentaController {
 
     }
 
-    // Traer TODAS las cuentas con manejo de errores que pueden venir del servicio.
+
+
+
+    // Traer TODAS las cuentas CON INFORMACIÓN SENSIBLE con manejo de errores que pueden venir del servicio (el manejo estas mas abajo).
+
+    @GetMapping("/completo")
+    public List<Cuenta> listarTodasLasCuentas() {
+        return cuentaService.obtenerTodasLasCuentas();
+    }
+
+
+
+
+    // Traer TODAS las cuentas SIN INFORMACIÓN SENSIBLE con manejo de errores que pueden venir del servicio.
 
     @Operation(summary = "Obtener todas las cuentas")
     @GetMapping
@@ -49,7 +66,11 @@ public class CuentaController {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
     }
 
-    // Traer una sola cuenta con manejo de excepción directamente en el controlador.
+
+
+
+
+    // Traer una sola cuenta SIN INFORMACION SENSIBLE con manejo de excepción directamente en el controlador.
 
     @Operation(summary = "Obtener cuenta por numero")
     @GetMapping("/{numeroCuenta}")
@@ -57,6 +78,9 @@ public class CuentaController {
         TraerCuentaDTO cuenta = cuentaService.obtenerCuentaDTOporNumero(numeroCuenta);
         return ResponseEntity.ok(cuenta);
     }
+
+
+
 
     // Eliminacion de cuentas con errores que pueden venir desde el servicio.
 
@@ -77,7 +101,10 @@ public class CuentaController {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Ocurrió un error: " + ex.getMessage());
     }
 
-    // Ver contactos frecuentes
+
+
+
+    // === VER CONTACTOS FRECUENTES ===
 
     @Operation(summary = "Obtener contactos frequentes por ID")
     @GetMapping("/contactos-frecuentes/{idUsuario}")

@@ -49,14 +49,14 @@ CREATE TABLE Transaccion (
 );
 
 CREATE TABLE Deposito (
-  id_transaccion     INTEGER PRIMARY KEY,
+  id_transaccion  INTEGER PRIMARY KEY,
   cuenta_destino  TEXT NOT NULL,
   FOREIGN KEY (id_transaccion) REFERENCES Transaccion(id_transaccion),
   FOREIGN KEY (cuenta_destino) REFERENCES Cuenta(numero_cuenta)
 );
 
 CREATE TABLE Extraccion (
-  id_transaccion   INTEGER PRIMARY KEY,
+  id_transaccion  INTEGER PRIMARY KEY,
   cuenta_origen   TEXT NOT NULL,
   FOREIGN KEY (id_transaccion) REFERENCES Transaccion(id_transaccion),
   FOREIGN KEY (cuenta_origen) REFERENCES Cuenta(numero_cuenta)

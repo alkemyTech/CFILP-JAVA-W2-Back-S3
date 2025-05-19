@@ -25,8 +25,8 @@ public class Usuario {
 
     private String telefono; // Columna 'telefono' (nullable por defecto = sí puede ser null)
 
-    @Column(name = "fecha_creacion", nullable = false) // Mapea la columna 'fecha_creacion' que NO puede ser null.
-    private LocalDateTime fechaCreacion;
+    @Column(name = "fecha_creacion", nullable = false, updatable = false)
+    private LocalDateTime fechaCreacion = LocalDateTime.now();
 
     @Column(nullable = false)
     private String contrasenia;
