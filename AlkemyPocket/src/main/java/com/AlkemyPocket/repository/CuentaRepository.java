@@ -15,6 +15,7 @@ public interface CuentaRepository extends JpaRepository<Cuenta, String> {
     Optional<Cuenta> findByAlias(String alias);
     Optional<Cuenta> findByNumeroCuenta(String numeroCuenta);
 
+
     @Query(value = """
         SELECT c.alias, c.cvu, u.nombre, u.apellido
         FROM cuenta c
