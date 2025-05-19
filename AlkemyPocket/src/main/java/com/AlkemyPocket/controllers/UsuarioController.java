@@ -1,6 +1,8 @@
 package com.AlkemyPocket.controllers;
 
 import com.AlkemyPocket.dto.ActualizarUsuarioDTO;
+import com.AlkemyPocket.dto.LoginRespuestaDTO;
+import com.AlkemyPocket.dto.LoginSolicitudDTO;
 import com.AlkemyPocket.model.Usuario; // Importa la clase usuario porque manipula objetos "Usuario".
 import com.AlkemyPocket.services.UsuarioService; // Importa la clase UsuarioService porque llama a sus métodos y esta importación permite usarlo como tipo de dato. (Ver despues la inyección).
 import io.swagger.v3.oas.annotations.Operation;
@@ -92,4 +94,15 @@ public class UsuarioController {
     public ResponseEntity<String> manejarErrores(Exception ex) {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Ocurrió un error: " + ex.getMessage());
     }
+
+    @PostMapping("/login")
+    public ResponseEntity<?> login(@RequestBody LoginSolicitudDTO solicitaLogin) {
+        try {
+            LoginRespuestaDTO response = usuarioService.login(solicitaLogin.getEmail(), solicitaLogin.getContrasenia());
+            return ResponseEntity.ok(response);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
+        }
+    }
+
 }
