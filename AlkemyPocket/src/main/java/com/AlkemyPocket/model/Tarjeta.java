@@ -45,6 +45,6 @@ public class Tarjeta {
     private PropiaTarjeta propia = PropiaTarjeta.TERCERO;
 
     @ManyToMany(mappedBy = "tarjetas")
-    @JsonBackReference // 👈 esta evita que se serialice en bucle
+    @JsonBackReference // Para que no genere un bucle al momento de traer tablas asociadas.
     private Set<Cuenta> cuentas = new HashSet<>();
 }
