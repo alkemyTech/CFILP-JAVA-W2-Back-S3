@@ -25,28 +25,45 @@ public class TransaccionService {
 
     @Autowired
     private TransferenciaRepository transferenciaRepository;
+
     @Autowired
     private CuentaRepository cuentaRepository;
 
 
+    // TRAE TODAS LAS TRANSACCIONES DE LA APP
+
     public List<Transaccion> listarTransacciones() {
         List<Transaccion> lista = transaccionRepository.findAll();
         if (lista.isEmpty()) {
-            throw new RuntimeException("No hay transacciones :(");
+            throw new IllegalArgumentException("No hay transacciones realizas todavía en AlkemyPocket");
         } else {
             return lista;
         }
     }
 
+    // TRAE TODAS LAS TRANSACCIONES DE UNA CUENTA PARTICULAR.
+
     public List<Transaccion> obtenerTransaccionesPorCuenta(String numeroCuenta) {
+
+        Cuenta cuenta = cuentaRepository.findByNumeroCuenta(numeroCuenta)
+                .orElseThrow(() -> new RuntimeException("La cuenta cuyos datos fueron solicitados no existe"));
+
+
         List<Transaccion> resultado = new ArrayList<>();
 
         resultado.addAll(extraccionRepository.findByCuentaOrigen_NumeroCuenta(numeroCuenta));
         resultado.addAll(depositoRepository.findByCuentaDestino_NumeroCuenta(numeroCuenta));
         resultado.addAll(transferenciaRepository.findByCuentaOrigen_NumeroCuentaOrCuentaDestino_NumeroCuenta(numeroCuenta, numeroCuenta));
 
-        return resultado;
+        if (resultado.isEmpty()) {
+            throw new IllegalArgumentException("No hay transacciones realizas todavía con la cuenta cuya información fué solicitada.");
+        } else {
+            return resultado;
+        }
+
     }
+
+    // Realiza una transferencia con posibles breaks.
 
     @Transactional
     public Transferencia realizarTransferencia(String nroCuentaOrigen, String nroCuentaDestino, BigDecimal monto, String descripcion) {
@@ -57,12 +74,16 @@ public class TransaccionService {
         Cuenta cuentaDestino = cuentaRepository.findByNumeroCuenta(nroCuentaDestino)
                 .orElseThrow(() -> new RuntimeException("Cuenta destino no existe"));
 
+        if (!cuentaOrigen.getMoneda().equals(cuentaDestino.getMoneda())){
+            throw new IllegalArgumentException("No puede transferir " + cuentaOrigen.getMoneda() + " a una cuenta cuya moneda es " + cuentaDestino.getMoneda());
+        };
+
         if (cuentaOrigen.equals(cuentaDestino)) {
-            throw new RuntimeException("No se puede transferir a la misma cuenta.");
+            throw new IllegalArgumentException("No se puede transferir a la misma cuenta.");
         }
 
         if (cuentaOrigen.getMonto().compareTo(monto) < 0) {
-            throw new RuntimeException("Saldo insuficiente en cuenta origen");
+            throw new IllegalArgumentException("Saldo insuficiente en cuenta origen");
         }
 
         String descripcionTransferencia = (descripcion == null || descripcion.isBlank())
@@ -89,8 +110,11 @@ public class TransaccionService {
         return transferenciaRepository.save(transferencia);
     }
 
+    // DEPOSITO con posibles breacks.
+
     @Transactional
     public Deposito realizarDeposito(String destino, BigDecimal monto, String descripcion){
+
         Cuenta CuentaDestino = cuentaRepository.findByNumeroCuenta(destino)
                 .orElseThrow(() -> new RuntimeException("Cuenta destino no existe"));
 
@@ -103,10 +127,8 @@ public class TransaccionService {
             : descripcion;
 
 
-        // Guardamos el dinero en la cuenta
         CuentaDestino.setMonto(CuentaDestino.getMonto().add(monto));
 
-        // Creamos el deposito
         Deposito deposito = new Deposito();
 
         deposito.setCuentaDestino(CuentaDestino);
@@ -118,27 +140,27 @@ public class TransaccionService {
         return depositoRepository.save(deposito);
     }
 
+    // EXTRACCION OK.
+
     @Transactional
     public Extraccion realizarExtraccion(String origen, BigDecimal monto, String descripcion){
         Cuenta cuentaOrigen = cuentaRepository.findByNumeroCuenta(origen)
                 .orElseThrow(() -> new RuntimeException("Cuenta origen no existe"));
 
         if(monto.compareTo(BigDecimal.ZERO) <= 0){
-            throw new RuntimeException("No puedes extraer un monto no positivo o nulo");
+            throw new IllegalArgumentException("No puedes extraer un monto no positivo o nulo");
         }
 
         if(monto.compareTo(cuentaOrigen.getMonto()) > 0){
-            throw new RuntimeException("No puedes extraer un monto que no tienes -.-");
+            throw new IllegalArgumentException("El saldo de la cuenta es insuficiente");
         }
 
         String descripcionExtraccion = (descripcion == null || descripcion.isBlank())
             ? "Extraccion de " + monto + "$ en " + origen
             : descripcion;
 
-        // Extraemos el dinero de la cuenta
         cuentaOrigen.setMonto(cuentaOrigen.getMonto().subtract(monto));
 
-        // Creamos la extraccion
         Extraccion extraccion = new Extraccion();
 
         extraccion.setMonto(monto);

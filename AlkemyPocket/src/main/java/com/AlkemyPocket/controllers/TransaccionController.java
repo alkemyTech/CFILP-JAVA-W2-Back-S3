@@ -2,23 +2,22 @@ package com.AlkemyPocket.controllers;
 
 import com.AlkemyPocket.dto.TransaccionDTO;
 import com.AlkemyPocket.model.*;
-import com.AlkemyPocket.repository.CuentaRepository;
-import com.AlkemyPocket.repository.TransaccionRepository;
 import com.AlkemyPocket.services.TransaccionService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.ErrorResponse;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Tag(name = "Transacciones", description = "Operaciones de transacciones")
@@ -28,6 +27,9 @@ public class TransaccionController {
 
     @Autowired
     private TransaccionService transaccionService;
+
+
+    // GET DE TODAS LAS TRANSACCIONES QUE HAY EN LA APP.
 
     @Operation(summary = "Obtener todas las transacciones")
     @GetMapping
@@ -41,10 +43,11 @@ public class TransaccionController {
         return ResponseEntity.ok(dtoList);
     }
 
-    // http://localhost:8080/AlkemyPocket/transacciones/traer-por?numeroCuenta=001-123456/1 -> Trea transacciones asociadas a ese num-cuenta
+
+    // TRAE TODAS LAS TRANSACCIONES DE UNA CUENTA PARTICULAR.
 
     @Operation(summary = "Obtener transacciones por cuenta")
-    @GetMapping("/traer-por")
+    @GetMapping("/porCuenta")
     public List<TransaccionDTO> getTransaccionesPorCuenta(@RequestParam  String numeroCuenta) {
         List<Transaccion> transacciones = transaccionService.obtenerTransaccionesPorCuenta(numeroCuenta);
 
@@ -52,7 +55,6 @@ public class TransaccionController {
                 .map(this::convertirADTO)
                 .collect(Collectors.toList());
     }
-
     private TransaccionDTO convertirADTO(Transaccion t) {
         TransaccionDTO dto = new TransaccionDTO();
         dto.setId_transaccion(t.getId_transaccion());
@@ -62,6 +64,9 @@ public class TransaccionController {
         dto.setEstado(t.getEstado());
         return dto;
     }
+
+
+    // TRANSFERENCIA
 
     @Operation(
             summary = "Transferir dinero a una cuenta",
@@ -73,18 +78,20 @@ public class TransaccionController {
                     )
             }
     )
-    @PostMapping("/transferir")
+    @PostMapping("/transferirDinero")
     public ResponseEntity<?> transferir(@RequestParam String origen,
                                         @RequestParam String destino,
                                         @RequestParam BigDecimal monto,
                                         @RequestParam(required = false) String descripcion) {
         try {
-            Transferencia transferencia = transaccionService.realizarTransferencia(origen, destino, monto, descripcion);
-            return ResponseEntity.ok(convertirADTO(transferencia));
+            return ResponseEntity.status(HttpStatus.OK).body(convertirADTO(transaccionService.realizarTransferencia(origen, destino, monto, descripcion)));
         } catch (RuntimeException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
+
+
+ // DEPOSITO
 
     @Operation(
             summary = "Depositar dinero en una cuenta",
@@ -96,7 +103,7 @@ public class TransaccionController {
                     )
             }
     )
-    @PostMapping("/depositar")
+    @PostMapping("/depositarDinero")
     public ResponseEntity<?> depositar(@RequestParam String destino,
                                        @RequestParam BigDecimal monto,
                                        @RequestParam(required = false) String descripcion) {
@@ -108,6 +115,9 @@ public class TransaccionController {
         }
     }
 
+
+    // EXTRACCION
+
     @Operation(
             summary = "Extraer dinero de una cuenta",
             responses = {
@@ -118,7 +128,7 @@ public class TransaccionController {
                     )
             }
     )
-    @PostMapping("/extraer")
+    @PostMapping("/extraerDinero")
     public ResponseEntity<?> extraer(@RequestParam String origen,
                                      @RequestParam BigDecimal monto,
                                      @RequestParam(required = false) String descripcion) {
@@ -129,5 +139,41 @@ public class TransaccionController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
+
+
+
+
+
+
+  // === MANEJO DE ERRORES ===
+
+  // NOTA IMPORTANTE CON RESPECTO A EXCEPCIONES: EN MUCHOS METODOS ESTAMOS USANDO TRY CATCH LO CUAL DEVULEVE SOLO UN TEXTO PLANO (PODRIAMOS MODIFICARLO INTERNAMENTE
+  // PERO ES UN LABURAZO Y NO HAY TIEMPO). EN OTROS METODOS NO HAY TRAY CATCH POR LO TANTO SE DEVUELVE UNA RESPUESTA MAS COMPLETA EN JSON.
+
+
+    @ExceptionHandler(RuntimeException.class)
+    public ResponseEntity<Map<String, Object>> handleRuntimeException(RuntimeException ex) {
+        Map<String, Object> error = new HashMap<>();
+        error.put("timestamp", LocalDateTime.now());
+        error.put("status", HttpStatus.INTERNAL_SERVER_ERROR.value());
+        error.put("error", "Internal Server Error");
+        error.put("message", ex.getMessage());
+
+        return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<Map<String, Object>> handleIllegalArgument(IllegalArgumentException ex) {
+        Map<String, Object> error = new HashMap<>();
+        error.put("timestamp", LocalDateTime.now());
+        error.put("status", HttpStatus.BAD_REQUEST.value());
+        error.put("error", "Bad Request");
+        error.put("message", ex.getMessage());
+
+        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+    }
+
+
+
 
 }

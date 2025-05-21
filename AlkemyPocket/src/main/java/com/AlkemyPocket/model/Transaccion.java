@@ -28,6 +28,12 @@ public class Transaccion {
     @Column(name = "estado")
     private EstadoTransaccion estado;
 
+
+
+    // Getters solamente.
+
+
+
     public BigDecimal getMonto() { return monto; }
     public void setMonto(BigDecimal monto) { this.monto = monto; }
 

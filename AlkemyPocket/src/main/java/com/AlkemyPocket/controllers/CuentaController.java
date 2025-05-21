@@ -41,16 +41,12 @@ public class CuentaController {
     }
 
 
-
-
     // Traer TODAS las cuentas CON INFORMACIÓN SENSIBLE con manejo de errores que pueden venir del servicio (el manejo estas mas abajo).
 
     @GetMapping("/completo")
     public List<Cuenta> listarTodasLasCuentas() {
         return cuentaService.obtenerTodasLasCuentas();
     }
-
-
 
 
     // Traer TODAS las cuentas SIN INFORMACIÓN SENSIBLE con manejo de errores que pueden venir del servicio.
