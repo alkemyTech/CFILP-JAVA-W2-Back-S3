@@ -1,6 +1,7 @@
 package com.AlkemyPocket.controllers;
 
 import com.AlkemyPocket.dto.CrearTarjetaNoPropiaDTO;
+import com.AlkemyPocket.dto.TarjetaDTO;
 import com.AlkemyPocket.model.Tarjeta;
 import com.AlkemyPocket.services.TarjetaService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,7 +48,11 @@ public class TarjetaController {
         return ResponseEntity.ok("Tarjeta eliminada correctamente");
     }
 
-
+    // Traer todas las tarjetas de un usuario.
+    @GetMapping("/porUsuario/{idUsuario}")
+    public ResponseEntity<List<TarjetaDTO>> obtenerPorUsuario(@PathVariable Integer idUsuario) {
+        return ResponseEntity.ok(tarjetaService.obtenerTarjetasPorUsuario(idUsuario));
+    }
 
     // === MANEJO DE ERRORES EN TERMINOS GENERALES ===
 

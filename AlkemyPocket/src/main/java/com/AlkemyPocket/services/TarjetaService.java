@@ -1,6 +1,7 @@
 package com.AlkemyPocket.services;
 
 import com.AlkemyPocket.dto.CrearTarjetaNoPropiaDTO;
+import com.AlkemyPocket.dto.TarjetaDTO;
 import com.AlkemyPocket.model.Cuenta;
 import com.AlkemyPocket.model.PropiaTarjeta;
 import com.AlkemyPocket.model.Tarjeta;
@@ -166,6 +167,39 @@ public class TarjetaService {
             sb.append(random.nextInt(10));
         }
         return sb.toString();
+    }
+
+    public List<TarjetaDTO> obtenerTarjetasPorUsuario(Integer idUsuario) {
+        // Primero deberíamos obtener todas las cuentas. Habría que manejar excepciones.
+        List<Cuenta> cuentas = cuentaRepository.findByUsuarioId(idUsuario);
+        if (cuentas.isEmpty()) {
+            throw new IllegalArgumentException("No se encuentra ninguna cuenta con el numero de usuario " + idUsuario);
+        }
+
+        // Luego procedemos a obtener las tarjetas asociadas a esas cuentas. Manejar excepciones también.
+        List<Tarjeta> tarjetas = new ArrayList<>();
+        List<TarjetaDTO> tarjetasDTO = new ArrayList<>();
+
+        for (Cuenta cuenta : cuentas) {
+            tarjetas.addAll(tarjetaRepository.findByCuentas(cuenta));
+        }
+        if (tarjetas.isEmpty()){
+            throw new IllegalArgumentException("No se encuentran tarjetas asociadas a las cuentas del usuario con número " + idUsuario);
+        };
+
+        for (Tarjeta tar : tarjetas){
+            TarjetaDTO dto = new TarjetaDTO();
+            dto.setNumeroTarjeta(tar.getNumeroTarjeta().substring(tar.getNumeroTarjeta().length() - 4));
+            dto.setFechaVencimiento(tar.getFechaVencimiento());
+            dto.setCompania(tar.getCompania());
+            dto.setTipo(tar.getTipo());
+            dto.setFechaEmision(tar.getFechaEmision());
+            dto.setParticular(tar.getParticular());
+
+            tarjetasDTO.add(dto);
+        }
+
+        return tarjetasDTO;
     }
 
 
