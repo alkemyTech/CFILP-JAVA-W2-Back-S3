@@ -1,6 +1,7 @@
 package com.AlkemyPocket.services;
 
 import com.AlkemyPocket.dto.ContactosFrecuentesDTO;
+import com.AlkemyPocket.dto.CuentaDTO;
 import com.AlkemyPocket.dto.TraerCuentaDTO;
 import com.AlkemyPocket.dto.UsuarioParaCuentaDTO;
 import com.AlkemyPocket.model.Cuenta;
@@ -14,10 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.Random;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -178,4 +176,32 @@ public class CuentaService {
             return contactos;
         }
     }
+
+    public List<CuentaDTO> obtenerCuentasPorUsuario(Integer idUsuario) {
+
+            List<Cuenta> cuentas = cuentaRepository.findByUsuarioId(idUsuario);
+            if (cuentas.isEmpty()) {
+                throw new IllegalArgumentException("No se encuentra ninguna cuenta con el numero de usuario " + idUsuario);
+            }
+
+        List<CuentaDTO> cuentasDTO = new ArrayList<CuentaDTO>();
+
+        cuentas.forEach(c -> {
+            CuentaDTO dto = new CuentaDTO(
+                    c.getNumeroCuenta(),
+                    c.getMoneda(),
+                    c.getMonto(),
+                    c.getAlias(),
+                    c.getTipo(),
+                    c.getCvu()
+            );
+            cuentasDTO.add(dto);
+        });
+
+        return cuentasDTO;
+    }
+
+
+
+
 }
