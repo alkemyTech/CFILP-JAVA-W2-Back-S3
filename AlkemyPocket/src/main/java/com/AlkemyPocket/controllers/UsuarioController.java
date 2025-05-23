@@ -26,7 +26,7 @@ public class UsuarioController {
 
     // GET CON MANEJO DE EXCEPCIÓN HANDLER.
 
-    @Operation(summary = "Obtener todos los usuarios")
+    @Operation(summary = "Obtener todos los usuarios registrados en la API.")
     @GetMapping // Declara que si el metodo es GET a la base de ruta a secas se ejecuta el siguiente metodo. NOTA IMPORTANTE: Debe coincidir la firma del metodo controlador con la firma del metodo del servicio que este llama.
     public ResponseEntity<List<Usuario>> obtenerTodos() {
             List<Usuario> usuarios = usuarioService.obtenerTodos();
@@ -52,7 +52,7 @@ public class UsuarioController {
 
     // POST DE CREACIÓN CON MANEJO DE TRY CATCH Y VALIDACIONES EN EL SERVICIO.
 
-    @Operation(summary = "Crear un usuario")
+    @Operation(summary = "Crear un usuario nuevo y automaticamente se crea una cuenta.")
     @PostMapping // Declara que si el metodo es POST a la base de ruta a secas se ejecuta el siguiente metodo.
     public ResponseEntity<?> crearUsuario(@RequestBody Usuario usuario) { // La notación significa que recibe un objeto tipo Usuario en el cuerpo de la petición y lo convierte en un JSON.
         try {
@@ -95,6 +95,7 @@ public class UsuarioController {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Ocurrió un error: " + ex.getMessage());
     }
 
+    @Operation(summary = "Logueo del Usuario con su mail y contraseña.")
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginSolicitudDTO solicitaLogin) {
         try {
