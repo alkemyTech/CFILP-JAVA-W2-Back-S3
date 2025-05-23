@@ -17,8 +17,8 @@ CREATE TABLE Cuenta (
   alias           TEXT UNIQUE,
   tipo            TEXT NOT NULL DEFAULT 'CA' CHECK (tipo IN ('CA', 'CC')),
   cvu             TEXT UNIQUE NOT NULL,
-  usuario_id      INTEGER NOT NULL,
-  FOREIGN KEY (usuario_id) REFERENCES Usuario(id_usuario)
+  id_usuario      INTEGER NOT NULL,
+  FOREIGN KEY (id_usuario) REFERENCES Usuario(id_usuario)
 );
 
 CREATE TABLE Tarjeta (
@@ -49,24 +49,24 @@ CREATE TABLE Transaccion (
 );
 
 CREATE TABLE Deposito (
-  id_deposito     INTEGER PRIMARY KEY,
+  id_transaccion  INTEGER PRIMARY KEY,
   cuenta_destino  TEXT NOT NULL,
-  FOREIGN KEY (id_deposito) REFERENCES Transaccion(id_transaccion),
+  FOREIGN KEY (id_transaccion) REFERENCES Transaccion(id_transaccion),
   FOREIGN KEY (cuenta_destino) REFERENCES Cuenta(numero_cuenta)
 );
 
 CREATE TABLE Extraccion (
-  id_extraccion   INTEGER PRIMARY KEY,
+  id_transaccion  INTEGER PRIMARY KEY,
   cuenta_origen   TEXT NOT NULL,
-  FOREIGN KEY (id_extraccion) REFERENCES Transaccion(id_transaccion),
+  FOREIGN KEY (id_transaccion) REFERENCES Transaccion(id_transaccion),
   FOREIGN KEY (cuenta_origen) REFERENCES Cuenta(numero_cuenta)
 );
 
 CREATE TABLE Transferencia (
-  id_transferencia INTEGER PRIMARY KEY,
+  id_transaccion INTEGER PRIMARY KEY,
   cuenta_origen    TEXT NOT NULL,
   cuenta_destino   TEXT NOT NULL,
-  FOREIGN KEY (id_transferencia) REFERENCES Transaccion(id_transaccion),
+  FOREIGN KEY (id_transaccion) REFERENCES Transaccion(id_transaccion),
   FOREIGN KEY (cuenta_origen) REFERENCES Cuenta(numero_cuenta),
   FOREIGN KEY (cuenta_destino) REFERENCES Cuenta(numero_cuenta)
 );
@@ -74,7 +74,6 @@ CREATE TABLE Transferencia (
 -- Índices
 
 CREATE INDEX idx_transaccion_fecha ON Transaccion(fecha);
-CREATE INDEX idx_cuenta_cliente ON Cuenta(cliente_id);
 CREATE INDEX idx_cuenta_cvu ON Cuenta(cvu);
 CREATE INDEX idx_cuenta_alias ON Cuenta(alias);
 CREATE INDEX idx_deposito_destino ON Deposito(cuenta_destino);

@@ -1,10 +1,12 @@
 package com.AlkemyPocket.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*; // Importa las anotaciones de JPA, para poder "decorar" la clase con @. Imagina que la clase es una caja grande con cosas dentro y con las anotaciones lo que hacemos es indicar como usarla, cómo usar cada cosa.
 import java.time.LocalDateTime; // Importa la clase para manejar fecha y hora.
 
 @Entity // Marca la clase como una ENTIDAD (una tabla en la base de datos).
 @Table(name = "usuario") // Dice que la tabla de la base de datos se llama 'usuario'.
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Usuario {
 
     @Id // Marca este campo como PRIMARY KEY.
@@ -23,8 +25,8 @@ public class Usuario {
 
     private String telefono; // Columna 'telefono' (nullable por defecto = sí puede ser null)
 
-    @Column(name = "fecha_creacion", nullable = false) // Mapea la columna 'fecha_creacion' que NO puede ser null.
-    private LocalDateTime fechaCreacion;
+    @Column(name = "fecha_creacion", nullable = false, updatable = false)
+    private LocalDateTime fechaCreacion = LocalDateTime.now();
 
     @Column(nullable = false)
     private String contrasenia;

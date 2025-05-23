@@ -43,4 +43,4 @@ SELECT
   C.cliente_id
 FROM Transaccion T
 JOIN Transferencia TR ON T.id_transaccion = TR.id_transaccion
-JOIN Cuenta C ON TR.cuenta_origen = C.nro_cuenta OR TR.cuenta_destino = C.nro_cuenta;
+JOIN Cuenta C ON TR.cuenta_origen = C.nro_cuenta OR TR.cuenta_destino = C.nro_cuenta; 

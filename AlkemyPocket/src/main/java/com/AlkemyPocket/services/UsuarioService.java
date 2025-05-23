@@ -1,10 +1,13 @@
 package com.AlkemyPocket.services;
 
 import com.AlkemyPocket.dto.ActualizarUsuarioDTO; // DATA TRANSFER OBJECT
+import com.AlkemyPocket.dto.LoginRespuestaDTO;
+import com.AlkemyPocket.helpers.JWTUtil;
 import com.AlkemyPocket.model.Usuario;
 import com.AlkemyPocket.repository.UsuarioRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,6 +20,12 @@ public class UsuarioService {
 
     @Autowired
     private CuentaService cuentaService;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private JWTUtil jwtUtil;
 
     public List<Usuario> obtenerTodos() {
         List<Usuario> lista = usuarioRepository.findAll();
@@ -33,6 +42,7 @@ public class UsuarioService {
     }
 
     public Usuario crearUsuario(Usuario usuario) {
+
         if (usuario.getNombre() == null || usuario.getNombre().isBlank()) {
             throw new IllegalArgumentException("El nombre es obligatorio");
         }
@@ -45,14 +55,17 @@ public class UsuarioService {
         if (usuario.getTelefono() == null || usuario.getTelefono().isBlank()) {
             throw new IllegalArgumentException("El teléfono es obligatorio");
         }
-        if (usuario.getFechaCreacion() == null) {
-            throw new IllegalArgumentException("La fecha de creación es obligatoria");
-        }
         if (usuario.getContrasenia() == null || usuario.getContrasenia().isBlank()) {
             throw new IllegalArgumentException("La contraseña es obligatoria");
         }
+
+
+        String passwordEncripted = passwordEncoder.encode(usuario.getContrasenia());
+        usuario.setContrasenia(passwordEncripted);
+
+        // Guardar usuario y crear cuenta por defecto
         Usuario nuevoUsuario = usuarioRepository.save(usuario);
-        cuentaService.crearCuenta(nuevoUsuario.getId(), null, null); // Lo establecimos asi para que ni bien se cree un usuario automaticamente se cree una cuenta en Pesos para ese usuario.
+        cuentaService.crearCuenta(nuevoUsuario.getId(), null, null);
         return nuevoUsuario;
     }
 
@@ -62,7 +75,13 @@ public class UsuarioService {
             if (usuarioActualizado.getApellido() != null) usuario.setApellido(usuarioActualizado.getApellido());
             if (usuarioActualizado.getEmail() != null) usuario.setEmail(usuarioActualizado.getEmail());
             if (usuarioActualizado.getTelefono() != null) usuario.setTelefono(usuarioActualizado.getTelefono());
-            if (usuarioActualizado.getContrasenia() != null) usuario.setContrasenia(usuarioActualizado.getContrasenia());
+
+            // Encriptar la nueva contraseña si viene una nueva
+            if (usuarioActualizado.getContrasenia() != null && !usuarioActualizado.getContrasenia().isBlank()) {
+                String passwordEncripted = passwordEncoder.encode(usuarioActualizado.getContrasenia());
+                usuario.setContrasenia(passwordEncripted);
+            }
+
             if (usuarioActualizado.getRol() != null) usuario.setRol(usuarioActualizado.getRol());
             return usuarioRepository.save(usuario);
         }).orElseThrow(() -> new RuntimeException("Usuario no encontrado con id " + id));
@@ -78,4 +97,18 @@ public class UsuarioService {
             throw new RuntimeException("Error al eliminar el usuario: " + e.getMessage());
         }
     }
+
+    public LoginRespuestaDTO login(String email, String contrasenia) {
+        Usuario usuario = usuarioRepository.findByEmail(email)
+                .orElseThrow(() -> new IllegalArgumentException("Usuario no encontrado con ese email"));
+
+        if (!passwordEncoder.matches(contrasenia, usuario.getContrasenia())) {
+            throw new IllegalArgumentException("Contraseña incorrecta");
+        }
+
+        String token = jwtUtil.generarToken(usuario.getEmail());
+        return new LoginRespuestaDTO(token, usuario);
+    }
+
+
 }

@@ -1,5 +1,7 @@
 package com.AlkemyPocket.services;
 
+import com.AlkemyPocket.dto.ContactosFrecuentesDTO;
+import com.AlkemyPocket.dto.CuentaDTO;
 import com.AlkemyPocket.dto.TraerCuentaDTO;
 import com.AlkemyPocket.dto.UsuarioParaCuentaDTO;
 import com.AlkemyPocket.model.Cuenta;
@@ -13,9 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Optional;
-import java.util.Random;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -53,8 +53,18 @@ public class CuentaService {
     }
 
 
+    // === TRAER TODAS LAS CUENTAS SIN INFORMACION SENSIBLE ===
+    public List<Cuenta> obtenerTodasLasCuentas() {
+        List<Cuenta> cuentas = cuentaRepository.findAll();
+        if (cuentas.isEmpty()){
+            throw new RuntimeException("No hay cuentas para ningun usuario registrado en Alkemy Pocket.");
+        } else {
+            return cuentas;
+        }
+    }
 
-    // === TRAER TODAS LAS CUENTAS ===
+
+    // === TRAER TODAS LAS CUENTAS SIN INFORMACION SENSIBLE ===
     public List<TraerCuentaDTO> obtenerCuentas() {
         List<TraerCuentaDTO> cuentas = cuentaRepository.findAll().stream()
                 .map(this::mapToDTO)
@@ -92,7 +102,7 @@ public class CuentaService {
     };
 
 
-    // === TRAER CUENTA POR PK ===
+    // === TRAER CUENTA POR PK SIN INFORMACION SENSIBLE ===
     public TraerCuentaDTO obtenerCuentaDTOporNumero(String numeroCuenta) {
         Cuenta cuenta = cuentaRepository.findById(numeroCuenta)
                 .orElseThrow(() -> new EntityNotFoundException("Cuenta no encontrada con el numero " + numeroCuenta));
@@ -157,4 +167,41 @@ public class CuentaService {
                 "." +
                 (random.nextInt(900) + 100);
     }
+
+    public List<ContactosFrecuentesDTO> obtenerContactosFrecuentes(Integer idUsuario) {
+        List<ContactosFrecuentesDTO> contactos = cuentaRepository.consultarContactosFrecuentes(idUsuario);
+        if (contactos.isEmpty()){
+            throw new RuntimeException("No hay contactos frecuentes para este Usuario.");
+        } else {
+            return contactos;
+        }
+    }
+
+    public List<CuentaDTO> obtenerCuentasPorUsuario(Integer idUsuario) {
+
+            List<Cuenta> cuentas = cuentaRepository.findByUsuarioId(idUsuario);
+            if (cuentas.isEmpty()) {
+                throw new IllegalArgumentException("No se encuentra ninguna cuenta con el numero de usuario " + idUsuario);
+            }
+
+        List<CuentaDTO> cuentasDTO = new ArrayList<CuentaDTO>();
+
+        cuentas.forEach(c -> {
+            CuentaDTO dto = new CuentaDTO(
+                    c.getNumeroCuenta(),
+                    c.getMoneda(),
+                    c.getMonto(),
+                    c.getAlias(),
+                    c.getTipo(),
+                    c.getCvu()
+            );
+            cuentasDTO.add(dto);
+        });
+
+        return cuentasDTO;
+    }
+
+
+
+
 }

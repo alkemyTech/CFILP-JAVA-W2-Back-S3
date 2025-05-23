@@ -3,6 +3,8 @@ package com.AlkemyPocket.security;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import static org.springframework.security.config.Customizer.withDefaults;
 
@@ -14,8 +16,14 @@ public class SecurityConfig {
         http
                 .csrf(csrf -> csrf.disable()) // Nueva forma para deshabilitar CSRF
                 .authorizeHttpRequests(auth -> auth
-                        .anyRequest().permitAll()  // Todo accesible
+                        .anyRequest().permitAll()  // Acceso total
                 );
         return http.build();
     }
+
+    @Bean
+    public PasswordEncoder passwordEncoder() { // permite que Spring te inyecte un PasswordEncoder en cualquier clase usando @Autowired o constructor.
+        return new BCryptPasswordEncoder();
+    }
+
 }

@@ -1,14 +1,26 @@
 package com.AlkemyPocket.dto;
 
 import com.AlkemyPocket.model.RolUsuario;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 public class ActualizarUsuarioDTO {
 
+    @Schema(example = "Juan")
     private String nombre;
+
+    @Schema(example = "Pérez")
     private String apellido;
+
+    @Schema(example = "juan.perez@example.com")
     private String email;
+
+    @Schema(example = "+5491122334455")
     private String telefono;
+
+    @Schema(example = "12345678")
     private String contrasenia;
+
+    @Schema(example = "cliente")
     private RolUsuario rol;
 
     public ActualizarUsuarioDTO() {
