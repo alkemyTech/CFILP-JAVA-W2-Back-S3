@@ -1,6 +1,7 @@
 package com.AlkemyPocket.controllers;
 
 import com.AlkemyPocket.dto.TransaccionDTO;
+import com.AlkemyPocket.dto.TransaccionDetalleDTO;
 import com.AlkemyPocket.model.*;
 import com.AlkemyPocket.services.TransaccionService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -48,22 +49,15 @@ public class TransaccionController {
 
     @Operation(summary = "Obtener transacciones por cuenta")
     @GetMapping("/porCuenta")
-    public List<TransaccionDTO> getTransaccionesPorCuenta(@RequestParam  String numeroCuenta) {
+    public List<TransaccionDetalleDTO> getTransaccionesPorCuenta(@RequestParam  String numeroCuenta) {
         List<Transaccion> transacciones = transaccionService.obtenerTransaccionesPorCuenta(numeroCuenta);
 
         return transacciones.stream()
-                .map(this::convertirADTO)
+                .map(t -> convertirADetalleDTO(t, numeroCuenta))
                 .collect(Collectors.toList());
     }
-    private TransaccionDTO convertirADTO(Transaccion t) {
-        TransaccionDTO dto = new TransaccionDTO();
-        dto.setId_transaccion(t.getId_transaccion());
-        dto.setMonto(t.getMonto());
-        dto.setDescripcion(t.getDescripcion());
-        dto.setFecha(t.getFecha());
-        dto.setEstado(t.getEstado());
-        return dto;
-    }
+
+
 
 
     // TRANSFERENCIA
@@ -140,9 +134,79 @@ public class TransaccionController {
         }
     }
 
+    // ======= METODOS DE CONVERSION INTERNOS DE LA CLASE =======
 
 
+    // Metodo clase 1.
+    private TransaccionDTO convertirADTO(Transaccion t) {
+        TransaccionDTO dto = new TransaccionDTO();
+        dto.setId_transaccion(t.getId_transaccion());
+        dto.setMonto(t.getMonto());
+        dto.setDescripcion(t.getDescripcion());
+        dto.setFecha(t.getFecha());
+        dto.setEstado(t.getEstado());
 
+        if (t instanceof Deposito) {
+            dto.setTipoTransaccion("DEPOSITO");
+            Deposito d = (Deposito) t;
+            dto.setCuentaDestino(d.getCuentaDestino().getNumeroCuenta());
+
+        } else if (t instanceof Extraccion) {
+            dto.setTipoTransaccion("EXTRACCION");
+            Extraccion e = (Extraccion) t;
+            dto.setCuentaOrigen(e.getCuentaOrigen().getNumeroCuenta());
+
+        } else if (t instanceof Transferencia) {
+            dto.setTipoTransaccion("TRANSFERENCIA");
+            Transferencia tr = (Transferencia) t;
+            dto.setCuentaOrigen(tr.getCuentaOrigen().getNumeroCuenta());
+            dto.setCuentaDestino(tr.getCuentaDestino().getNumeroCuenta());
+
+        } else {
+            dto.setTipoTransaccion("DESCONOCIDA");
+        }
+
+        return dto;
+    }
+    // Metodo de clase especial.
+    private TransaccionDetalleDTO convertirADetalleDTO(Transaccion t, String cuentaConsultada) {
+        TransaccionDetalleDTO dto = new TransaccionDetalleDTO();
+        dto.setId_transaccion(t.getId_transaccion());
+        dto.setMonto(t.getMonto());
+        dto.setDescripcion(t.getDescripcion());
+        dto.setFecha(t.getFecha());
+        dto.setEstado(t.getEstado());
+
+        if (t instanceof Deposito) {
+            dto.setTipoTransaccion("DEPOSITO");
+            Deposito d = (Deposito) t;
+            String cuentaDestino = d.getCuentaDestino().getNumeroCuenta();
+            dto.setCuentaDestino(cuentaDestino);
+            dto.setImpacto(cuentaDestino.equals(cuentaConsultada) ? "INGRESO" : "EGRESO");
+
+        } else if (t instanceof Extraccion) {
+            dto.setTipoTransaccion("EXTRACCION");
+            Extraccion e = (Extraccion) t;
+            String cuentaOrigen = e.getCuentaOrigen().getNumeroCuenta();
+            dto.setCuentaOrigen(cuentaOrigen);
+            dto.setImpacto(cuentaOrigen.equals(cuentaConsultada) ? "EGRESO" : "INGRESO");
+
+        } else if (t instanceof Transferencia) {
+            dto.setTipoTransaccion("TRANSFERENCIA");
+            Transferencia tr = (Transferencia) t;
+            String cuentaOrigen = tr.getCuentaOrigen().getNumeroCuenta();
+            String cuentaDestino = tr.getCuentaDestino().getNumeroCuenta();
+            dto.setCuentaOrigen(cuentaOrigen);
+            dto.setCuentaDestino(cuentaDestino);
+            dto.setImpacto(cuentaOrigen.equals(cuentaConsultada) ? "EGRESO" : "INGRESO");
+
+        } else {
+            dto.setTipoTransaccion("DESCONOCIDA");
+            dto.setImpacto("DESCONOCIDO");
+        }
+
+        return dto;
+    }
 
 
   // === MANEJO DE ERRORES ===
