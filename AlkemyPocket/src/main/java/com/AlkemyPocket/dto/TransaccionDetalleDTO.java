@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class TransaccionDTO {
+public class TransaccionDetalleDTO {
     private Integer id_transaccion;
     private BigDecimal monto;
     private String descripcion;
@@ -20,5 +20,6 @@ public class TransaccionDTO {
     private String tipoTransaccion;
     private String cuentaOrigen;
     private String cuentaDestino;
+    private String impacto;
 
 }
