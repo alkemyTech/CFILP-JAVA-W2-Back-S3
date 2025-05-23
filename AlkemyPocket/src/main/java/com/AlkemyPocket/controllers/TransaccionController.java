@@ -32,7 +32,7 @@ public class TransaccionController {
 
     // GET DE TODAS LAS TRANSACCIONES QUE HAY EN LA APP.
 
-    @Operation(summary = "Obtener todas las transacciones")
+    @Operation(summary = "Obtener todas las transacciones que hay en la WALLET.")
     @GetMapping
     public ResponseEntity<List<TransaccionDTO>> listarTransacciones() {
         List<Transaccion> transacciones = transaccionService.listarTransacciones();
@@ -47,7 +47,7 @@ public class TransaccionController {
 
     // TRAE TODAS LAS TRANSACCIONES DE UNA CUENTA PARTICULAR.
 
-    @Operation(summary = "Obtener transacciones por cuenta")
+    @Operation(summary = "Obtener transacciones de una cuenta en particular.")
     @GetMapping("/porCuenta")
     public List<TransaccionDetalleDTO> getTransaccionesPorCuenta(@RequestParam  String numeroCuenta) {
         List<Transaccion> transacciones = transaccionService.obtenerTransaccionesPorCuenta(numeroCuenta);
@@ -62,16 +62,7 @@ public class TransaccionController {
 
     // TRANSFERENCIA
 
-    @Operation(
-            summary = "Transferir dinero a una cuenta",
-            responses = {
-                    @ApiResponse(
-                            responseCode = "200",
-                            description = "Transferencia exitosa",
-                            content = @Content(schema = @Schema(implementation = TransaccionDTO.class))
-                    )
-            }
-    )
+    @Operation(summary = "Transferir dinero desde una cuenta registrada a otra.")
     @PostMapping("/transferirDinero")
     public ResponseEntity<?> transferir(@RequestParam String origen,
                                         @RequestParam String destino,
@@ -87,16 +78,7 @@ public class TransaccionController {
 
  // DEPOSITO
 
-    @Operation(
-            summary = "Depositar dinero en una cuenta",
-            responses = {
-                    @ApiResponse(
-                            responseCode = "200",
-                            description = "Depósito exitoso",
-                            content = @Content(schema = @Schema(implementation = TransaccionDTO.class))
-                    )
-            }
-    )
+    @Operation(summary = "Depositar dinero en una cuenta")
     @PostMapping("/depositarDinero")
     public ResponseEntity<?> depositar(@RequestParam String destino,
                                        @RequestParam BigDecimal monto,
@@ -112,16 +94,7 @@ public class TransaccionController {
 
     // EXTRACCION
 
-    @Operation(
-            summary = "Extraer dinero de una cuenta",
-            responses = {
-                    @ApiResponse(
-                            responseCode = "200",
-                            description = "Extracción exitosa",
-                            content = @Content(schema = @Schema(implementation = TransaccionDTO.class))
-                    )
-            }
-    )
+    @Operation(summary = "Extraer dinero de una cuenta")
     @PostMapping("/extraerDinero")
     public ResponseEntity<?> extraer(@RequestParam String origen,
                                      @RequestParam BigDecimal monto,

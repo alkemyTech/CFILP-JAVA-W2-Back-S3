@@ -33,7 +33,8 @@ public class CuentaController {
 
     // Creacion de una cuenta AUTOMATICA y NO AUTOMATICA.
 
-    @Operation(summary = "Crear cuenta")
+    @Operation(summary = "Crear una cuenta referida a un usuario",
+            description = "La creación puede ser automatica con la creacion del mismo usuario o puede ser aparte una vez que el usuario ya creado la solicita.")
     @PostMapping
     public ResponseEntity<?> crearCuenta(@RequestParam Integer usuarioId, @RequestParam(required = false) String tipo, @RequestParam (required = false) String moneda) {
         try {
@@ -47,6 +48,8 @@ public class CuentaController {
 
     // Traer TODAS las cuentas CON INFORMACIÓN SENSIBLE con manejo de errores que pueden venir del servicio (el manejo estas mas abajo).
 
+    @Operation(summary = "Trae todas las cuentas de la WALLET",
+            description = "Trae las cuentas CON INFORMACION SENSIBLE, ideal para el uso por parte del Admin.")
     @GetMapping("/completo")
     public List<Cuenta> listarTodasLasCuentas() {
         return cuentaService.obtenerTodasLasCuentas();
@@ -55,7 +58,8 @@ public class CuentaController {
 
     // Traer TODAS las cuentas SIN INFORMACIÓN SENSIBLE con manejo de errores que pueden venir del servicio.
 
-    @Operation(summary = "Obtener todas las cuentas")
+    @Operation(summary = "Trae todas las cuentas de la WALLET",
+            description = "Trae las cuentas SIN INFORMACION SENSIBLE.")
     @GetMapping
     public ResponseEntity<List<TraerCuentaDTO>> listarCuentas() {
         List <TraerCuentaDTO> cuentas = cuentaService.obtenerCuentas();
@@ -65,7 +69,8 @@ public class CuentaController {
 
     // Traer una sola cuenta SIN INFORMACION SENSIBLE con manejo de excepción directamente en el controlador.
 
-    @Operation(summary = "Obtener cuenta por numero")
+    @Operation(summary = "Trae información de una sola cuenta",
+            description = "De acuerdo al numero de cuenta se trae TODA la informacion de esa cuenta SIN DATOS SENSIBLES. Ideal para el frontend.")
     @GetMapping("/{numeroCuenta}")
     public ResponseEntity<TraerCuentaDTO> obtenerCuenta(@PathVariable String numeroCuenta) {
         TraerCuentaDTO cuenta = cuentaService.obtenerCuentaDTOporNumero(numeroCuenta);
@@ -73,6 +78,8 @@ public class CuentaController {
     }
 
     // Traer varias cuentas SIN INFORMACION SENSIBLE de acuerdo al numero de ID.
+    @Operation(summary = "Trae todas las cuentas de UN SOLO USUARIO",
+            description = "Con base en el ID se obtienen los datos de las cuentas del usuario consultado.")
     @GetMapping("/porUsuario/{idUsuario}")
     public ResponseEntity<List<CuentaDTO>> obtenerCuentasPorUsuario(@PathVariable Integer idUsuario) {
         return ResponseEntity.ok(cuentaService.obtenerCuentasPorUsuario(idUsuario));
@@ -114,7 +121,8 @@ public class CuentaController {
 
     // === VER CONTACTOS FRECUENTES ===
 
-    @Operation(summary = "Obtener contactos frequentes por ID")
+    @Operation(summary = "Obtener contactos frequentes por ID",
+    description = "Se obtienen los contactos con los que sabe interactuar un usuario.")
     @GetMapping("/contactos-frecuentes/{idUsuario}")
     public ResponseEntity<List<ContactosFrecuentesDTO>> obtenerContactosFrecuentes(@PathVariable Integer idUsuario) {
         List<ContactosFrecuentesDTO> contactos = cuentaService.obtenerContactosFrecuentes(idUsuario);

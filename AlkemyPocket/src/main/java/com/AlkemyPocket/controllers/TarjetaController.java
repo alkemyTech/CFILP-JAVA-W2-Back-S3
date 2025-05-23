@@ -4,6 +4,7 @@ import com.AlkemyPocket.dto.CrearTarjetaNoPropiaDTO;
 import com.AlkemyPocket.dto.TarjetaDTO;
 import com.AlkemyPocket.model.Tarjeta;
 import com.AlkemyPocket.services.TarjetaService;
+import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,6 +23,8 @@ public class TarjetaController {
     private TarjetaService tarjetaService;
 
     // Crear tarjeta NO PROPIA asociada a una cuenta
+    @Operation(summary = "Creacion de una tarjeta extraña a la WALLET",
+            description = "Se asocia una tarjeta que no es de la WALLET AP a una cuenta del usuario.")
     @PostMapping("/noPropia/{numeroCuenta}")
     public Tarjeta crearTarjeta(@RequestBody CrearTarjetaNoPropiaDTO dto,
                                 @PathVariable String numeroCuenta) {
@@ -29,6 +32,8 @@ public class TarjetaController {
     }
 
     // Crear tarjeta PROPIA asociada a una cuenta
+    @Operation(summary = "Creacion de una tarjeta propia a la WALLET",
+            description = "Se asocia una tarjeta que SI es de la WALLET AP a una cuenta del usuario.")
     @PostMapping("/propia/{numeroCuenta}")
     public Tarjeta crearTarjeta(@PathVariable String numeroCuenta,
                                 @RequestParam String nombreTitular) {
@@ -36,12 +41,14 @@ public class TarjetaController {
     }
 
     // Traer tarjetas por cuenta
+    @Operation(summary = "Trae todas las tarjetas que tiene una cuenta -se busca por numero de cuenta-.")
     @GetMapping("/{numeroCuenta}")
     public List<Tarjeta> obtenerPorCuenta(@PathVariable String numeroCuenta) {
         return tarjetaService.obtenerTarjetasPorCuenta(numeroCuenta);
     }
 
     // Eliminar tarjeta por número
+    @Operation(summary = "Se elimina una tarjeta por su número.")
     @DeleteMapping("/{numeroTarjeta}")
     public ResponseEntity<String>  eliminarTarjeta(@PathVariable String numeroTarjeta) {
         tarjetaService.eliminarTarjeta(numeroTarjeta);
@@ -49,6 +56,8 @@ public class TarjetaController {
     }
 
     // Traer todas las tarjetas de un usuario.
+    @Operation(summary = "Trae todas las tarjetas del usuario",
+            description = "Se buscan todas las tarjetas del usuario buscando a traves de su id. Lo usa el frontEnd.")
     @GetMapping("/porUsuario/{idUsuario}")
     public ResponseEntity<List<TarjetaDTO>> obtenerPorUsuario(@PathVariable Integer idUsuario) {
         return ResponseEntity.ok(tarjetaService.obtenerTarjetasPorUsuario(idUsuario));
