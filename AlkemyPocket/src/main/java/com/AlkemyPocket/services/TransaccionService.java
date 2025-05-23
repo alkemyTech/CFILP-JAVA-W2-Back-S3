@@ -55,11 +55,9 @@ public class TransaccionService {
         resultado.addAll(depositoRepository.findByCuentaDestino_NumeroCuenta(numeroCuenta));
         resultado.addAll(transferenciaRepository.findByCuentaOrigen_NumeroCuentaOrCuentaDestino_NumeroCuenta(numeroCuenta, numeroCuenta));
 
-        if (resultado.isEmpty()) {
-            throw new IllegalArgumentException("No hay transacciones realizas todavía con la cuenta cuya información fué solicitada.");
-        } else {
-            return resultado;
-        }
+
+        return resultado;
+
 
     }
 

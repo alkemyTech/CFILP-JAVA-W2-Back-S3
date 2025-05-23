@@ -11,14 +11,13 @@ public class CorsConfig {
     @Bean
     public WebMvcConfigurer corsConfigurer() {
         return new WebMvcConfigurer() {
-
             @Override
             public void addCorsMappings(CorsRegistry registry) {
-                registry.addMapping("/**") // Permitir CORS en todas las rutas
-                        .allowedOrigins("http://localhost:3000") // Cambiá esto si tu frontend tiene otro origen
+                registry.addMapping("/**")
+                        .allowedOrigins("http://localhost:5173", "http://localhost:3000") // Agrega aquí 5173
                         .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                         .allowedHeaders("*")
-                        .allowCredentials(true); // Si estás usando cookies o tokens
+                        .allowCredentials(true);
             }
         };
     }
