@@ -183,9 +183,10 @@ public class TarjetaService {
         for (Cuenta cuenta : cuentas) {
             tarjetas.addAll(tarjetaRepository.findByCuentas(cuenta));
         }
-        if (tarjetas.isEmpty()){
-            throw new IllegalArgumentException("No se encuentran tarjetas asociadas a las cuentas del usuario con número " + idUsuario);
-        };
+//        Quitado a solicitud del frontend.
+//        if (tarjetas.isEmpty()){
+//            throw new IllegalArgumentException("No se encuentran tarjetas asociadas a las cuentas del usuario con número " + idUsuario);
+//        };
 
         for (Tarjeta tar : tarjetas){
             TarjetaDTO dto = new TarjetaDTO();
