@@ -170,11 +170,8 @@ public class CuentaService {
 
     public List<ContactosFrecuentesDTO> obtenerContactosFrecuentes(Integer idUsuario) {
         List<ContactosFrecuentesDTO> contactos = cuentaRepository.consultarContactosFrecuentes(idUsuario);
-        if (contactos.isEmpty()){
-            throw new RuntimeException("No hay contactos frecuentes para este Usuario.");
-        } else {
-            return contactos;
-        }
+
+        return contactos;
     }
 
     public List<CuentaDTO> obtenerCuentasPorUsuario(Integer idUsuario) {
