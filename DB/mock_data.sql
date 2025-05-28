@@ -9,15 +9,15 @@ INSERT INTO Usuario (id_usuario, nombre, apellido, email, telefono, contrasenia,
 
 
 INSERT INTO Cuenta (numero_cuenta, moneda, monto, fecha, alias, tipo, cvu, id_usuario) VALUES
-('001-123456/1', 'ARS', 160000.50, '2023-01-15', 'JUAN.PEREZ.CAJA', 'CA', '0000000100000000000001', 1), -- Original era 'Caja de Ahorro'
-('001-123456/2', 'USD', 260.75, '2023-01-15', 'JUAN.PEREZ.DOLAR', 'CA', '0000000100000000000002', 1), -- Original era 'Caja de Ahorro'
-('002-987654/1', 'ARS', 540000.00, '2022-11-20', 'MARIA.LOPEZ.CC', 'CC', '0000000200000000000001', 2), -- Original era 'Cuenta Corriente'
-('003-112233/1', 'ARS', 1275.00, '2024-03-10', 'CARLOS.GOMEZ.CA', 'CA', '0000000300000000000001', 3), -- Original era 'Caja de Ahorro'
-('004-445566/1', 'USD', 1500.00, '2023-05-01', 'ANA.RODRIGUEZ.DOLAR', 'CA', '0000000400000000000001', 4), -- Original era 'Caja de Ahorro'
-('004-445566/2', 'ARS', 78000.00, '2023-05-01', 'ANA.RODRIGUEZ.CA', 'CA', '0000000400000000000002', 4), -- Original era 'Caja de Ahorro'
-('005-000111/1', 'ARS', 50000.00, '2024-04-25', 'ADMIN.CLIENTE.CA', 'CA', '0000000500000000000001', 5), -- Original era 'Caja de Ahorro'
-('006-778899/1', 'ARS', 300000.00, '2024-01-05', 'LAURA.F.CA', 'CA', '0000000600000000000001', 6), -- Original era 'Caja de Ahorro'
-('007-112200/1', 'USD', 45.00, '2024-02-18', 'PEDRO.M.DOLAR', 'CA', '0000000700000000000001', 7); -- Original era 'Caja de Ahorro'
+('001-123456', 'ARS', 160000.50, '2023-01-15', 'JUAN.PEREZ.CAJA', 'CA', '0000000100000000000001', 1), -- Original era 'Caja de Ahorro'
+('001-123456', 'USD', 260.75, '2023-01-15', 'JUAN.PEREZ.DOLAR', 'CA', '0000000100000000000002', 1), -- Original era 'Caja de Ahorro'
+('002-987654', 'ARS', 540000.00, '2022-11-20', 'MARIA.LOPEZ.CC', 'CC', '0000000200000000000001', 2), -- Original era 'Cuenta Corriente'
+('003-112233', 'ARS', 1275.00, '2024-03-10', 'CARLOS.GOMEZ.CA', 'CA', '0000000300000000000001', 3), -- Original era 'Caja de Ahorro'
+('004-445566', 'USD', 1500.00, '2023-05-01', 'ANA.RODRIGUEZ.DOLAR', 'CA', '0000000400000000000001', 4), -- Original era 'Caja de Ahorro'
+('004-445566', 'ARS', 78000.00, '2023-05-01', 'ANA.RODRIGUEZ.CA', 'CA', '0000000400000000000002', 4), -- Original era 'Caja de Ahorro'
+('005-000111', 'ARS', 50000.00, '2024-04-25', 'ADMIN.CLIENTE.CA', 'CA', '0000000500000000000001', 5), -- Original era 'Caja de Ahorro'
+('006-778899', 'ARS', 300000.00, '2024-01-05', 'LAURA.F.CA', 'CA', '0000000600000000000001', 6), -- Original era 'Caja de Ahorro'
+('007-112200', 'USD', 45.00, '2024-02-18', 'PEDRO.M.DOLAR', 'CA', '0000000700000000000001', 7); -- Original era 'Caja de Ahorro'
 
 
 INSERT INTO Tarjeta (numero_tarjeta, codigo_seguridad, fecha_vencimiento, compania, tipo, fecha_emision, particular, propia) VALUES
@@ -31,13 +31,13 @@ INSERT INTO Tarjeta (numero_tarjeta, codigo_seguridad, fecha_vencimiento, compan
 
 
 INSERT INTO Cuenta_Tarjeta (numero_cuenta, numero_tarjeta) VALUES
-('001-123456/1', '4000111122223333'), -- Juan ARS CA con su tarjeta VISA Credito (Propia)
-('002-987654/1', '5000444455556666'), -- Maria ARS CC con su tarjeta Mastercard Debito (Propia)
-('004-445566/2', '4000777788889999'), -- Ana ARS CA con su tarjeta VISA Debito (Propia)
-('004-445566/2', '5111222233334444'), -- Ana ARS CA con su tarjeta Mastercard Credito (Ajena 1)
-('004-445566/2', '4222333344445555'), -- Ana ARS CA con su tarjeta VISA Debito (Ajena 2)
-('005-000111/1', '5000111100009999'), -- Admin/Cliente ARS CA con su tarjeta Mastercard Credito (Propia)
-('006-778899/1', '6000333344445555'); -- Laura ARS CA con su tarjeta AMEX Credito (Propia)
+('001-123456', '4000111122223333'), -- Juan ARS CA con su tarjeta VISA Credito (Propia)
+('002-987654', '5000444455556666'), -- Maria ARS CC con su tarjeta Mastercard Debito (Propia)
+('004-445566', '4000777788889999'), -- Ana ARS CA con su tarjeta VISA Debito (Propia)
+('004-445566', '5111222233334444'), -- Ana ARS CA con su tarjeta Mastercard Credito (Ajena 1)
+('004-445566', '4222333344445555'), -- Ana ARS CA con su tarjeta VISA Debito (Ajena 2)
+('005-000111', '5000111100009999'), -- Admin/Cliente ARS CA con su tarjeta Mastercard Credito (Propia)
+('006-778899', '6000333344445555'); -- Laura ARS CA con su tarjeta AMEX Credito (Propia)
 -- Carlos Gomez (ID 3) y Pedro Martinez (ID 7) no tienen entradas aquí.
 
 
@@ -57,21 +57,21 @@ INSERT INTO Transaccion (monto, descripcion, fecha, estado) VALUES
 
 
 INSERT INTO Deposito (id_transaccion, cuenta_destino) VALUES
-(1, '001-123456/1'), -- Deposito Juan
-(4, '002-987654/1'), -- Deposito Maria
-(6, '001-123456/1'), -- Deposito Juan
-(10, '003-112233/1'); -- Deposito Carlos
+(1, '001-123456'), -- Deposito Juan
+(4, '002-987654'), -- Deposito Maria
+(6, '001-123456'), -- Deposito Juan
+(10, '003-112233'); -- Deposito Carlos
 
 
 INSERT INTO Extraccion (id_transaccion, cuenta_origen) VALUES
-(2, '002-987654/1'), -- Extraccion Maria
-(5, '004-445566/2'), -- Extraccion Ana (asociada a compra con tarjeta)
-(7, '006-778899/1'), -- Extraccion Laura
-(12, '007-112200/1'); -- Extraccion Pedro (fallida)
+(2, '002-987654'), -- Extraccion Maria
+(5, '004-445566'), -- Extraccion Ana (asociada a compra con tarjeta)
+(7, '006-778899'), -- Extraccion Laura
+(12, '007-112200'); -- Extraccion Pedro (fallida)
 
 
 INSERT INTO Transferencia (id_transaccion, cuenta_origen, cuenta_destino) VALUES
-(3, '001-123456/1', '002-987654/1'), -- Transferencia Juan a Maria
-(8, '002-987654/1', '001-123456/1'), -- Transferencia Maria a Juan
-(9, '001-123456/1', '003-112233/1'), -- Transferencia Juan a Carlos
-(11, '005-000111/1', '006-778899/1'); -- Transferencia Admin/Cliente a Laura
+(3, '001-123456', '002-987654'), -- Transferencia Juan a Maria
+(8, '002-987654', '001-123456'), -- Transferencia Maria a Juan
+(9, '001-123456', '003-112233'), -- Transferencia Juan a Carlos
+(11, '005-000111', '006-778899'); -- Transferencia Admin/Cliente a Laura

@@ -190,7 +190,7 @@ public class TarjetaService {
 
         for (Tarjeta tar : tarjetas){
             TarjetaDTO dto = new TarjetaDTO();
-            dto.setNumeroTarjeta(tar.getNumeroTarjeta().substring(tar.getNumeroTarjeta().length() - 4));
+            dto.setNumeroTarjeta(tar.getNumeroTarjeta());
             dto.setFechaVencimiento(tar.getFechaVencimiento());
             dto.setCompania(tar.getCompania());
             dto.setTipo(tar.getTipo());
