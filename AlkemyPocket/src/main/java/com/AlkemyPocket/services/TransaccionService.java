@@ -69,12 +69,12 @@ public class TransaccionService {
     // Realiza una transferencia con posibles breaks.
 
     @Transactional
-    public Transferencia realizarTransferencia(String nroCuentaOrigen, String nroCuentaDestino, BigDecimal monto, String descripcion) {
+    public Transferencia realizarTransferencia(String nroCuentaOrigen, String aliasDestino, BigDecimal monto, String descripcion) {
 
         Cuenta cuentaOrigen = cuentaRepository.findByNumeroCuenta(nroCuentaOrigen)
                 .orElseThrow(() -> new RuntimeException("Cuenta origen no existe"));
 
-        Cuenta cuentaDestino = cuentaRepository.findByNumeroCuenta(nroCuentaDestino)
+        Cuenta cuentaDestino = cuentaRepository.findByAlias(aliasDestino)
                 .orElseThrow(() -> new RuntimeException("Cuenta destino no existe"));
 
         if (!cuentaOrigen.getMoneda().equals(cuentaDestino.getMoneda())){
@@ -90,7 +90,7 @@ public class TransaccionService {
         }
 
         String descripcionTransferencia = (descripcion == null || descripcion.isBlank())
-            ? "Transferencia de " + nroCuentaOrigen + " a " + nroCuentaDestino
+            ? "Transferencia de " + nroCuentaOrigen + " a alias " + aliasDestino
             : descripcion;
 
         // Para restar y sumar:

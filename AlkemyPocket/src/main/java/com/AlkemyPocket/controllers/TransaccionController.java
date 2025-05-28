@@ -23,6 +23,7 @@ import java.util.stream.Collectors;
 
 @Tag(name = "Transacciones", description = "Operaciones de transacciones")
 @RestController
+@CrossOrigin(origins = "http://localhost:5173")
 @RequestMapping("/AlkemyPocket/transacciones")
 public class TransaccionController {
 
