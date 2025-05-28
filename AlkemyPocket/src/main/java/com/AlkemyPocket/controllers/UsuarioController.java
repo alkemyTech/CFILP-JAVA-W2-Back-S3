@@ -18,6 +18,7 @@ import java.util.List; // Importa tipo de dato que va a ir en las respuestas.
 @Tag(name = "Usuarios")
 @RestController // Convertimos la clase en un controlador REST, significa que los métodos devuelven directamente JSON (no vistas HTML).
 @RequestMapping("/AlkemyPocket/usuarios") // Define la base para todas las rutas => Tenemos que ver de cambiarlo a AlkemyPocket/usuarios o similar.
+@CrossOrigin(origins = "http://localhost:5173")
 public class UsuarioController {
 
 
