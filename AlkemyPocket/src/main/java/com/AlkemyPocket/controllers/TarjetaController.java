@@ -17,6 +17,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/AlkemyPocket/tarjetas")
+@CrossOrigin(origins = "http://localhost:5173")
 public class TarjetaController {
 
     @Autowired

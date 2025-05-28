@@ -23,6 +23,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/AlkemyPocket/cuentas")
 @RequiredArgsConstructor
+@CrossOrigin(origins = "http://localhost:5173")
 public class CuentaController {
 
     @Autowired
